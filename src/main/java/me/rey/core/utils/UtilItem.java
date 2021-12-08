@@ -1,0 +1,675 @@
+package me.rey.core.utils;
+
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+
+public class UtilItem {
+
+    public static List<MaterialInfo> materials;
+
+    static {
+        //material, specificDurability, name, otherNames
+        materials = new ArrayList<>();
+        materials.add(new MaterialInfo("Air", Material.AIR, new String[]{}));
+        materials.add(new MaterialInfo("Stone", Material.STONE, new String[]{}));
+        materials.add(new MaterialInfo("Granite", Material.STONE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Polished Granite", Material.STONE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Diorite", Material.STONE, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Polished Diorite", Material.STONE, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Andesite", Material.STONE, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Polished Andesite", Material.STONE, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Grass", Material.GRASS, new String[]{}));
+        materials.add(new MaterialInfo("Dirt", Material.DIRT, new String[]{}));
+        materials.add(new MaterialInfo("Coarse Dirt", Material.DIRT, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Podzol", Material.DIRT, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Cobblestone", Material.COBBLESTONE, new String[]{}));
+        materials.add(new MaterialInfo("Oak Wood", Material.WOOD, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Wood", Material.WOOD, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Birch Wood", Material.WOOD, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Jungle Wood", Material.WOOD, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Acacia Wood", Material.WOOD, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Dark Oak Wood", Material.WOOD, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Oak Sapling", Material.SAPLING, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Sapling", Material.SAPLING, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Birch Sapling", Material.SAPLING, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Jungle Sapling", Material.SAPLING, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Acacia Sapling", Material.SAPLING, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Dark Oak Sapling", Material.SAPLING, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Bedrock", Material.BEDROCK, new String[]{}));
+        materials.add(new MaterialInfo("Water", Material.WATER, new String[]{}));
+        materials.add(new MaterialInfo("Stationary Water", Material.STATIONARY_WATER, new String[]{}));
+        materials.add(new MaterialInfo("Lava", Material.LAVA, new String[]{}));
+        materials.add(new MaterialInfo("Stationary Lava", Material.STATIONARY_LAVA, new String[]{}));
+        materials.add(new MaterialInfo("Sand", Material.SAND, new String[]{}));
+        materials.add(new MaterialInfo("Red Sand", Material.SAND, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Gravel", Material.GRAVEL, new String[]{}));
+        materials.add(new MaterialInfo("Gold Ore", Material.GOLD_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Ore", Material.IRON_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Coal Ore", Material.COAL_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Oak Log", Material.LOG, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Log", Material.LOG, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Birch Log", Material.LOG, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Jungle Log", Material.LOG, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Oak Leaves", Material.LEAVES, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Leaves", Material.LEAVES, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Birch Leaves", Material.LEAVES, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Jungle Leaves", Material.LEAVES, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Sponge", Material.SPONGE, new String[]{}));
+        materials.add(new MaterialInfo("Wet Sponge", Material.SPONGE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Glass", Material.GLASS, new String[]{}));
+        materials.add(new MaterialInfo("Lapis Lazuli Ore", Material.LAPIS_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Lapis Lazuli Block", Material.LAPIS_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Dispenser", Material.DISPENSER, new String[]{}));
+        materials.add(new MaterialInfo("Sandstone", Material.SANDSTONE, new String[]{}));
+        materials.add(new MaterialInfo("Chiseled Sandstone", Material.SANDSTONE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Smooth Sandstone", Material.SANDSTONE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Note Block", Material.NOTE_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Bed Block", Material.BED_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Powered Rail", Material.POWERED_RAIL, new String[]{}));
+        materials.add(new MaterialInfo("Detector Rail", Material.DETECTOR_RAIL, new String[]{}));
+        materials.add(new MaterialInfo("Sticky Piston Base", Material.PISTON_STICKY_BASE, new String[]{}));
+        materials.add(new MaterialInfo("Cobweb", Material.WEB, new String[]{}));
+        materials.add(new MaterialInfo("Dead Shrub", Material.LONG_GRASS, new String[]{}));
+        materials.add(new MaterialInfo("Grass", Material.LONG_GRASS, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Fern", Material.DEAD_BUSH, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Dead Bush", Material.DEAD_BUSH, new String[]{}));
+        materials.add(new MaterialInfo("Piston Base", Material.PISTON_BASE, new String[]{}));
+        materials.add(new MaterialInfo("Piston Extension", Material.PISTON_EXTENSION, new String[]{}));
+        materials.add(new MaterialInfo("Wool", Material.WOOL, new String[]{}));
+        materials.add(new MaterialInfo("Orange Wool", Material.WOOL, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Magenta Wool", Material.WOOL, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Light Blue Wool", Material.WOOL, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Yellow Wool", Material.WOOL, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Lime Wool", Material.WOOL, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Pink Wool", Material.WOOL, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Gray Wool", Material.WOOL, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Light Gray Wool", Material.WOOL, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Cyan Wool", Material.WOOL, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Purple Wool", Material.WOOL, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Blue Wool", Material.WOOL, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Brown Wool", Material.WOOL, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Green Wool", Material.WOOL, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Red Wool", Material.WOOL, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Black Wool", Material.WOOL, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Piston Moving Piece", Material.PISTON_MOVING_PIECE, new String[]{}));
+        materials.add(new MaterialInfo("Dandelion", Material.YELLOW_FLOWER, new String[]{}));
+        materials.add(new MaterialInfo("Poppy", Material.RED_ROSE, new String[]{}));
+        materials.add(new MaterialInfo("Blue Orchid", Material.RED_ROSE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Allium", Material.RED_ROSE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Azure Bluet", Material.RED_ROSE, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Red Tulip", Material.RED_ROSE, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Orange Tulip", Material.RED_ROSE, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("White Tulip", Material.RED_ROSE, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Pink Tulip", Material.RED_ROSE, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Oxeye Daisy", Material.RED_ROSE, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Brown Mushroom", Material.BROWN_MUSHROOM, new String[]{}));
+        materials.add(new MaterialInfo("Red Mushroom", Material.RED_MUSHROOM, new String[]{}));
+        materials.add(new MaterialInfo("Gold Block", Material.GOLD_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Iron Block", Material.IRON_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Double Stone Slab", Material.DOUBLE_STEP, new String[]{}));
+        materials.add(new MaterialInfo("Double Sandstone Slab", Material.DOUBLE_STEP, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Double Cobblestone Slab", Material.DOUBLE_STEP, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Double Brick Slab", Material.DOUBLE_STEP, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Double Stone Brick Slab", Material.DOUBLE_STEP, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Double Nether Brick Slab", Material.DOUBLE_STEP, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Double Quartz Slab", Material.DOUBLE_STEP, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Stone Slab", Material.STEP, new String[]{}));
+        materials.add(new MaterialInfo("Sandstone Slab", Material.STEP, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Cobblestone Slab", Material.STEP, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Brick Slab", Material.STEP, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Stone Brick Slab", Material.STEP, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Nether Brick Slab", Material.STEP, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Quartz Slab", Material.STEP, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Bricks", Material.BRICK, new String[]{}));
+        materials.add(new MaterialInfo("TNT", Material.TNT, new String[]{}));
+        materials.add(new MaterialInfo("Bookshelf", Material.BOOKSHELF, new String[]{}));
+        materials.add(new MaterialInfo("Moss Stone", Material.MOSSY_COBBLESTONE, new String[]{}));
+        materials.add(new MaterialInfo("Obsidian", Material.OBSIDIAN, new String[]{}));
+        materials.add(new MaterialInfo("Torch", Material.TORCH, new String[]{}));
+        materials.add(new MaterialInfo("Fire", Material.FIRE, new String[]{}));
+        materials.add(new MaterialInfo("Mob Spawner", Material.MOB_SPAWNER, new String[]{}));
+        materials.add(new MaterialInfo("Oak Wood Stars", Material.WOOD_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Chest", Material.CHEST, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Wire", Material.REDSTONE_WIRE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Ore", Material.DIAMOND_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Block", Material.DIAMOND_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Crafting Table", Material.WORKBENCH, new String[]{}));
+        materials.add(new MaterialInfo("Wheat Crops", Material.CROPS, new String[]{}));
+        materials.add(new MaterialInfo("Farmland", Material.SOIL, new String[]{}));
+        materials.add(new MaterialInfo("Furnace", Material.FURNACE, new String[]{}));
+        materials.add(new MaterialInfo("Burning Furnace", Material.BURNING_FURNACE, new String[]{}));
+        materials.add(new MaterialInfo("Standing Sign Block", Material.SIGN_POST, new String[]{}));
+        materials.add(new MaterialInfo("Oak Door Block", Material.WOODEN_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Ladder", Material.LADDER, new String[]{}));
+        materials.add(new MaterialInfo("Rail", Material.RAILS, new String[]{}));
+        materials.add(new MaterialInfo("Cobblestone Stairs", Material.COBBLESTONE_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Wall-mounted Sign Block", Material.WALL_SIGN, new String[]{}));
+        materials.add(new MaterialInfo("Lever", Material.LEVER, new String[]{}));
+        materials.add(new MaterialInfo("Stone Pressure Plate", Material.STONE_PLATE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Door Block", Material.IRON_DOOR_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Wooden Pressure Plate", Material.WOOD_PLATE, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Ore", Material.REDSTONE_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Glowing Redstone Ore", Material.GLOWING_REDSTONE_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Torch Off", Material.REDSTONE_TORCH_OFF, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Torch On", Material.REDSTONE_TORCH_ON, new String[]{}));
+        materials.add(new MaterialInfo("Stone Button", Material.STONE_BUTTON, new String[]{}));
+        materials.add(new MaterialInfo("Snow", Material.SNOW, new String[]{}));
+        materials.add(new MaterialInfo("Ice", Material.ICE, new String[]{}));
+        materials.add(new MaterialInfo("Snow Block", Material.SNOW_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Cactus", Material.CACTUS, new String[]{}));
+        materials.add(new MaterialInfo("Clay", Material.CLAY, new String[]{}));
+        materials.add(new MaterialInfo("Sugar Canes", Material.SUGAR_CANE_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Jukebox", Material.JUKEBOX, new String[]{}));
+        materials.add(new MaterialInfo("Oak Fence", Material.FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Pumpkin", Material.PUMPKIN, new String[]{}));
+        materials.add(new MaterialInfo("Netherrack", Material.NETHERRACK, new String[]{}));
+        materials.add(new MaterialInfo("Soul Sand", Material.SOUL_SAND, new String[]{}));
+        materials.add(new MaterialInfo("Glowstone", Material.GLOWSTONE, new String[]{}));
+        materials.add(new MaterialInfo("Nether Portal", Material.PORTAL, new String[]{}));
+        materials.add(new MaterialInfo("Jack o'Lantern", Material.JACK_O_LANTERN, new String[]{}));
+        materials.add(new MaterialInfo("Cake Block", Material.CAKE_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Repeater Block Off", Material.DIODE_BLOCK_OFF, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Repeater Block On", Material.DIODE_BLOCK_ON, new String[]{}));
+        materials.add(new MaterialInfo("White Stained Glass", Material.STAINED_GLASS, new String[]{}));
+        materials.add(new MaterialInfo("Orange Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Magenta Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Light Blue Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Yellow Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Lime Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Pink Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Gray Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Light Gray Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Cyan Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Purple Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Blue Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Brown Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Green Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Red Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Black Stained Glass", Material.STAINED_GLASS, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Wooden Trapdoor", Material.TRAP_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Stone Monster Egg", Material.MONSTER_EGGS, new String[]{}));
+        materials.add(new MaterialInfo("Cobblestone Monster Egg", Material.MONSTER_EGGS, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Stone Brick Monster Egg", Material.MONSTER_EGGS, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Mossy Stone Brick Monster Egg", Material.MONSTER_EGGS, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Cracked Stone Brick Monster Egg", Material.MONSTER_EGGS, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Chiseled Stone Brick Monster Egg", Material.MONSTER_EGGS, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Stone Bricks", Material.SMOOTH_BRICK, new String[]{}));
+        materials.add(new MaterialInfo("Mossy Stone Bricks", Material.SMOOTH_BRICK, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Cracked Stone Bricks", Material.SMOOTH_BRICK, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Chiseled Stone Bricks", Material.SMOOTH_BRICK, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Brown Mushroom Block", Material.HUGE_MUSHROOM_1, new String[]{}));
+        materials.add(new MaterialInfo("Red Mushroom Block", Material.HUGE_MUSHROOM_2, new String[]{}));
+        materials.add(new MaterialInfo("Iron Bars", Material.IRON_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Glass Pane", Material.THIN_GLASS, new String[]{}));
+        materials.add(new MaterialInfo("Melon Block", Material.MELON_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Pumpkin Stem", Material.PUMPKIN_STEM, new String[]{}));
+        materials.add(new MaterialInfo("Melon Stem", Material.MELON_STEM, new String[]{}));
+        materials.add(new MaterialInfo("Vines", Material.VINE, new String[]{}));
+        materials.add(new MaterialInfo("Oak Fence Gate", Material.FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Brick Stars", Material.BRICK_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Stone Brick Stars", Material.SMOOTH_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Mycelium", Material.MYCEL, new String[]{}));
+        materials.add(new MaterialInfo("Lily Pad", Material.WATER_LILY, new String[]{}));
+        materials.add(new MaterialInfo("Nether Brick", Material.NETHER_BRICK, new String[]{}));
+        materials.add(new MaterialInfo("Nether Brick Fence", Material.NETHER_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Nether Brick Stars", Material.NETHER_BRICK_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Nether Wart", Material.NETHER_WARTS, new String[]{}));
+        materials.add(new MaterialInfo("Enchantment Table", Material.ENCHANTMENT_TABLE, new String[]{}));
+        materials.add(new MaterialInfo("Brewing Stand", Material.BREWING_STAND, new String[]{}));
+        materials.add(new MaterialInfo("Cauldron", Material.CAULDRON, new String[]{}));
+        materials.add(new MaterialInfo("End Portal", Material.ENDER_PORTAL, new String[]{}));
+        materials.add(new MaterialInfo("End Portal Frame", Material.ENDER_PORTAL_FRAME, new String[]{}));
+        materials.add(new MaterialInfo("End Stone", Material.ENDER_STONE, new String[]{}));
+        materials.add(new MaterialInfo("Dragon Egg", Material.DRAGON_EGG, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Lamp", Material.REDSTONE_LAMP_OFF, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Lamp On", Material.REDSTONE_LAMP_ON, new String[]{}));
+        materials.add(new MaterialInfo("Double Oak Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}));
+        materials.add(new MaterialInfo("Double Spruce Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Double Birch Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Double Jungle Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Double Acacia Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Double Dark Oak Wood Slab", Material.WOOD_DOUBLE_STEP, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Oak Wood Slab", Material.WOOD_STEP, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Wood Slab", Material.WOOD_STEP, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Birch Wood Slab", Material.WOOD_STEP, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Jungle Wood Slab", Material.WOOD_STEP, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Acacia Wood Slab", Material.WOOD_STEP, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Dark Oak Wood Slab", Material.WOOD_STEP, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Cocoa", Material.COCOA, new String[]{}));
+        materials.add(new MaterialInfo("Standstone Stairs", Material.SANDSTONE_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Emerald Ore", Material.EMERALD_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Ender Chest", Material.ENDER_CHEST, new String[]{}));
+        materials.add(new MaterialInfo("Tripwire Hook", Material.TRIPWIRE_HOOK, new String[]{}));
+        materials.add(new MaterialInfo("Tripwire", Material.TRIPWIRE, new String[]{}));
+        materials.add(new MaterialInfo("Emerald Block", Material.EMERALD_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Wood Stairs", Material.SPRUCE_WOOD_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Birch Wood Stairs", Material.BIRCH_WOOD_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Jungle Wood Stairs", Material.JUNGLE_WOOD_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Command Block", Material.COMMAND, new String[]{}));
+        materials.add(new MaterialInfo("Beacon", Material.BEACON, new String[]{}));
+        materials.add(new MaterialInfo("Cobblestone Wall", Material.COBBLE_WALL, new String[]{}));
+        materials.add(new MaterialInfo("Mossy Cobblestone Wall", Material.COBBLE_WALL, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Flower Pot", Material.FLOWER_POT, new String[]{}));
+        materials.add(new MaterialInfo("Carrots", Material.CARROT, new String[]{}));
+        materials.add(new MaterialInfo("Potatoes", Material.POTATO, new String[]{}));
+        materials.add(new MaterialInfo("Wooden Button", Material.WOOD_BUTTON, new String[]{}));
+        materials.add(new MaterialInfo("Mob Head", Material.SKULL, new String[]{}));
+        materials.add(new MaterialInfo("Anvil", Material.ANVIL, new String[]{}));
+        materials.add(new MaterialInfo("Trapped Chest", Material.TRAPPED_CHEST, new String[]{}));
+        materials.add(new MaterialInfo("Weighted Pressure Plate (Light)", Material.GOLD_PLATE, new String[]{}));
+        materials.add(new MaterialInfo("Weighted Pressure Plate (Heavy)", Material.IRON_PLATE, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Comparator Inactive", Material.REDSTONE_COMPARATOR_OFF, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Comparator Active", Material.REDSTONE_COMPARATOR_ON, new String[]{}));
+        materials.add(new MaterialInfo("Daylight Sensor", Material.DAYLIGHT_DETECTOR, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Block", Material.REDSTONE_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Nether Quartz Ore", Material.QUARTZ_ORE, new String[]{}));
+        materials.add(new MaterialInfo("Hopper", Material.HOPPER, new String[]{}));
+        materials.add(new MaterialInfo("Quartz Block", Material.QUARTZ_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Chiseled Quartz Block", Material.QUARTZ_BLOCK, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Pillar Quartz Block", Material.QUARTZ_BLOCK, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Quartz Stairs", Material.QUARTZ_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Activator Rail", Material.ACTIVATOR_RAIL, new String[]{}));
+        materials.add(new MaterialInfo("Dropper", Material.DROPPER, new String[]{}));
+        materials.add(new MaterialInfo("White Stained Clay", Material.STAINED_CLAY, new String[]{}));
+        materials.add(new MaterialInfo("Orange Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Magenta Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Light Blue Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Yellow Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Lime Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Pink Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Gray Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Light Gray Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Cyan Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Purple Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Blue Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Brown Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Green Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Red Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Black Stained Clay", Material.STAINED_CLAY, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("White Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}));
+        materials.add(new MaterialInfo("Orange Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Magenta Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Light Blue Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Yellow Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Lime Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Pink Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Gray Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Light Gray Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Cyan Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Purple Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Blue Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Brown Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Green Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Red Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Black Stained Glass Pane", Material.STAINED_GLASS_PANE, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Acacia Leaves", Material.LEAVES_2, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Leaves", Material.LEAVES_2, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Acacia Wood", Material.LOG_2, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Wood", Material.LOG_2, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Acacia Wood Stairs", Material.ACACIA_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Wood Stairs", Material.DARK_OAK_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Slime Block", Material.SLIME_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Barrier", Material.BARRIER, new String[]{}));
+        materials.add(new MaterialInfo("Iron Trapdoor", Material.IRON_TRAPDOOR, new String[]{}));
+        materials.add(new MaterialInfo("Prismarine", Material.PRISMARINE, new String[]{}));
+        materials.add(new MaterialInfo("Prismarine Bricks", Material.PRISMARINE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Dark Prismarine", Material.PRISMARINE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Sea Lantern", Material.SEA_LANTERN, new String[]{}));
+        materials.add(new MaterialInfo("Hay Bale", Material.HAY_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("White Carpet", Material.CARPET, new String[]{}));
+        materials.add(new MaterialInfo("Orange Carpet", Material.CARPET, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Magenta Carpet", Material.CARPET, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Light Blue Carpet", Material.CARPET, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Yellow Carpet", Material.CARPET, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Lime Carpet", Material.CARPET, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Pink Carpet", Material.CARPET, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Gray Carpet", Material.CARPET, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Light Gray Carpet", Material.CARPET, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Cyan Carpet", Material.CARPET, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Purple Carpet", Material.CARPET, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Blue Carpet", Material.CARPET, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Brown Carpet", Material.CARPET, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Green Carpet", Material.CARPET, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Red Carpet", Material.CARPET, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Black Carpet", Material.CARPET, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Hardened Clay", Material.HARD_CLAY, new String[]{}));
+        materials.add(new MaterialInfo("Block of Coal", Material.COAL_BLOCK, new String[]{}));
+        materials.add(new MaterialInfo("Packed Ice", Material.PACKED_ICE, new String[]{}));
+        materials.add(new MaterialInfo("Sunflower", Material.DOUBLE_PLANT, new String[]{}));
+        materials.add(new MaterialInfo("Lilac", Material.DOUBLE_PLANT, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Double Tallgrass", Material.DOUBLE_PLANT, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Large Fern", Material.DOUBLE_PLANT, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Rose Bush", Material.DOUBLE_PLANT, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Peony", Material.DOUBLE_PLANT, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Free-standing Banner", Material.STANDING_BANNER, new String[]{}));
+        materials.add(new MaterialInfo("Wall-mounted Banner", Material.WALL_BANNER, new String[]{}));
+        materials.add(new MaterialInfo("Inverted Daylight Sensor", Material.DAYLIGHT_DETECTOR_INVERTED, new String[]{}));
+        materials.add(new MaterialInfo("Red Standstone", Material.RED_SANDSTONE, new String[]{}));
+        materials.add(new MaterialInfo("Chiseled Red Sandstone", Material.RED_SANDSTONE, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Smooth Red Sandstone", Material.RED_SANDSTONE, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Red Sandstone Stairs", Material.RED_SANDSTONE_STAIRS, new String[]{}));
+        materials.add(new MaterialInfo("Double Red Sandstone Slab", Material.DOUBLE_STONE_SLAB2, new String[]{}));
+        materials.add(new MaterialInfo("Red Sandstone Slab", Material.STONE_SLAB2, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Fence Gate", Material.SPRUCE_FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Birch Fence Gate", Material.BIRCH_FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Jungle Fence Gate", Material.JUNGLE_FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Fence Gate", Material.DARK_OAK_FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Acacia Fence Gate", Material.ACACIA_FENCE_GATE, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Fence", Material.SPRUCE_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Birch Fence", Material.BIRCH_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Jungle Fence", Material.JUNGLE_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Fence", Material.DARK_OAK_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Acacia Fence", Material.ACACIA_FENCE, new String[]{}));
+        materials.add(new MaterialInfo("Spruce Door Block", Material.SPRUCE_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Birch Door Block", Material.BIRCH_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Jungle Door Block", Material.JUNGLE_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Acacia Door Block", Material.ACACIA_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Door Block", Material.DARK_OAK_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Iron Shovel", Material.IRON_SPADE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Pickaxe", Material.IRON_PICKAXE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Axe", Material.IRON_AXE, new String[]{}));
+        materials.add(new MaterialInfo("Flint and Steel", Material.FLINT_AND_STEEL, new String[]{}));
+        materials.add(new MaterialInfo("Apple", Material.APPLE, new String[]{}));
+        materials.add(new MaterialInfo("Bow", Material.BOW, new String[]{}));
+        materials.add(new MaterialInfo("Arrow", Material.ARROW, new String[]{}));
+        materials.add(new MaterialInfo("Coal", Material.COAL, new String[]{}));
+        materials.add(new MaterialInfo("Diamond", Material.DIAMOND, new String[]{}));
+        materials.add(new MaterialInfo("Iron Ingot", Material.IRON_INGOT, new String[]{}));
+        materials.add(new MaterialInfo("Gold Ingot", Material.GOLD_INGOT, new String[]{}));
+        materials.add(new MaterialInfo("Iron Sword", Material.IRON_SWORD, new String[]{}));
+        materials.add(new MaterialInfo("Wood Sword", Material.WOOD_SWORD, new String[]{}));
+        materials.add(new MaterialInfo("Wood Shovel", Material.WOOD_SPADE, new String[]{}));
+        materials.add(new MaterialInfo("Wood Pickaxe", Material.WOOD_PICKAXE, new String[]{}));
+        materials.add(new MaterialInfo("Wood Axe", Material.WOOD_AXE, new String[]{}));
+        materials.add(new MaterialInfo("Stone Sword", Material.STONE_SWORD, new String[]{}));
+        materials.add(new MaterialInfo("Stone Shovel", Material.STONE_SPADE, new String[]{}));
+        materials.add(new MaterialInfo("Stone Pickaxe", Material.STONE_PICKAXE, new String[]{}));
+        materials.add(new MaterialInfo("Stone Axe", Material.STONE_AXE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Sword", Material.DIAMOND_SWORD, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Shovel", Material.DIAMOND_SPADE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Pickaxe", Material.DIAMOND_PICKAXE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Axe", Material.DIAMOND_AXE, new String[]{}));
+        materials.add(new MaterialInfo("Stick", Material.STICK, new String[]{}));
+        materials.add(new MaterialInfo("Bowl", Material.BOWL, new String[]{}));
+        materials.add(new MaterialInfo("Mushroom Stew", Material.MUSHROOM_SOUP, new String[]{}));
+        materials.add(new MaterialInfo("Gold Sword", Material.GOLD_SWORD, new String[]{}));
+        materials.add(new MaterialInfo("Gold Shovel", Material.GOLD_SPADE, new String[]{}));
+        materials.add(new MaterialInfo("Gold Pickaxe", Material.GOLD_PICKAXE, new String[]{}));
+        materials.add(new MaterialInfo("Gold Axe", Material.GOLD_AXE, new String[]{}));
+        materials.add(new MaterialInfo("String", Material.STRING, new String[]{}));
+        materials.add(new MaterialInfo("Feather", Material.FEATHER, new String[]{}));
+        materials.add(new MaterialInfo("Sulphur", Material.SULPHUR, new String[]{}));
+        materials.add(new MaterialInfo("Wooden Hoe", Material.WOOD_HOE, new String[]{}));
+        materials.add(new MaterialInfo("Stone Hoe", Material.STONE_HOE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Hoe", Material.IRON_HOE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Hoe", Material.DIAMOND_HOE, new String[]{}));
+        materials.add(new MaterialInfo("Gold Hoe", Material.GOLD_HOE, new String[]{}));
+        materials.add(new MaterialInfo("Seeds", Material.SEEDS, new String[]{}));
+        materials.add(new MaterialInfo("Wheat", Material.WHEAT, new String[]{}));
+        materials.add(new MaterialInfo("Bread", Material.BREAD, new String[]{}));
+        materials.add(new MaterialInfo("Leather Cap", Material.LEATHER_HELMET, new String[]{}));
+        materials.add(new MaterialInfo("Leather Tunic", Material.LEATHER_CHESTPLATE, new String[]{}));
+        materials.add(new MaterialInfo("Leather Pants", Material.LEATHER_LEGGINGS, new String[]{}));
+        materials.add(new MaterialInfo("Leather Boots", Material.LEATHER_BOOTS, new String[]{}));
+        materials.add(new MaterialInfo("Chain Helmet", Material.CHAINMAIL_HELMET, new String[]{}));
+        materials.add(new MaterialInfo("Chain Chestplate", Material.CHAINMAIL_CHESTPLATE, new String[]{}));
+        materials.add(new MaterialInfo("Chain Leggings", Material.CHAINMAIL_LEGGINGS, new String[]{}));
+        materials.add(new MaterialInfo("Chain Boots", Material.CHAINMAIL_BOOTS, new String[]{}));
+        materials.add(new MaterialInfo("Iron Helmet", Material.IRON_HELMET, new String[]{}));
+        materials.add(new MaterialInfo("Iron Chestplate", Material.IRON_CHESTPLATE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Leggings", Material.IRON_LEGGINGS, new String[]{}));
+        materials.add(new MaterialInfo("Iron Boots", Material.IRON_BOOTS, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Helmet", Material.DIAMOND_HELMET, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Chestplate", Material.DIAMOND_CHESTPLATE, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Leggings", Material.DIAMOND_LEGGINGS, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Boots", Material.DIAMOND_BOOTS, new String[]{}));
+        materials.add(new MaterialInfo("Gold Helmet", Material.GOLD_HELMET, new String[]{}));
+        materials.add(new MaterialInfo("Gold Chestplate", Material.GOLD_CHESTPLATE, new String[]{}));
+        materials.add(new MaterialInfo("Gold Leggings", Material.GOLD_LEGGINGS, new String[]{}));
+        materials.add(new MaterialInfo("Gold Boots", Material.GOLD_BOOTS, new String[]{}));
+        materials.add(new MaterialInfo("Flint", Material.FLINT, new String[]{}));
+        materials.add(new MaterialInfo("Raw Porkchop", Material.PORK, new String[]{}));
+        materials.add(new MaterialInfo("Cooked Porkchop", Material.GRILLED_PORK, new String[]{}));
+        materials.add(new MaterialInfo("Painting", Material.PAINTING, new String[]{}));
+        materials.add(new MaterialInfo("Golden Apple", Material.GOLDEN_APPLE, new String[]{}));
+        materials.add(new MaterialInfo("Sign", Material.SIGN, new String[]{}));
+        materials.add(new MaterialInfo("Oak Wood Door", Material.WOOD_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Bucket", Material.BUCKET, new String[]{}));
+        materials.add(new MaterialInfo("Water Bucket", Material.WATER_BUCKET, new String[]{}));
+        materials.add(new MaterialInfo("Lava Bucket", Material.LAVA_BUCKET, new String[]{}));
+        materials.add(new MaterialInfo("Minecart", Material.MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Saddle", Material.SADDLE, new String[]{}));
+        materials.add(new MaterialInfo("Iron Door", Material.IRON_DOOR, new String[]{}));
+        materials.add(new MaterialInfo("Redstone", Material.REDSTONE, new String[]{}));
+        materials.add(new MaterialInfo("Snowball", Material.SNOW_BALL, new String[]{}));
+        materials.add(new MaterialInfo("Boat", Material.BOAT, new String[]{}));
+        materials.add(new MaterialInfo("Leather", Material.LEATHER, new String[]{}));
+        materials.add(new MaterialInfo("Milk Bucket", Material.MILK_BUCKET, new String[]{}));
+        materials.add(new MaterialInfo("Brick", Material.CLAY_BRICK, new String[]{}));
+        materials.add(new MaterialInfo("Clay", Material.CLAY_BALL, new String[]{}));
+        materials.add(new MaterialInfo("Sugar Canes", Material.SUGAR_CANE, new String[]{}));
+        materials.add(new MaterialInfo("Paper", Material.PAPER, new String[]{}));
+        materials.add(new MaterialInfo("Book", Material.BOOK, new String[]{}));
+        materials.add(new MaterialInfo("Slimeball", Material.SLIME_BALL, new String[]{}));
+        materials.add(new MaterialInfo("Minecart with Chest", Material.STORAGE_MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Minecart with Furnace", Material.POWERED_MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Egg", Material.EGG, new String[]{}));
+        materials.add(new MaterialInfo("Compass", Material.COMPASS, new String[]{}));
+        materials.add(new MaterialInfo("Fishing Rod", Material.FISHING_ROD, new String[]{}));
+        materials.add(new MaterialInfo("Clock", Material.WATCH, new String[]{}));
+        materials.add(new MaterialInfo("Glowstone Dust", Material.GLOWSTONE_DUST, new String[]{}));
+        materials.add(new MaterialInfo("Raw Fish", Material.RAW_FISH, new String[]{}));
+        materials.add(new MaterialInfo("Cooked Fish", Material.COOKED_FISH, new String[]{}));
+        materials.add(new MaterialInfo("Ink Sac", Material.INK_SACK, new String[]{}));
+        materials.add(new MaterialInfo("Rose Red", Material.INK_SACK, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Cactus Green", Material.INK_SACK, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Cocoa Beans", Material.INK_SACK, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Lapis Lazuli", Material.INK_SACK, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Purple Dye", Material.INK_SACK, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Cyan Dye", Material.INK_SACK, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Light Gray Dye", Material.INK_SACK, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Gray Dye", Material.INK_SACK, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Pink Dye", Material.INK_SACK, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Lime Dye", Material.INK_SACK, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Dandelion Yellow", Material.INK_SACK, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Light Blue Dye", Material.INK_SACK, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Magenta Dye", Material.INK_SACK, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Orange Dye", Material.INK_SACK, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("Bone Meal", Material.INK_SACK, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Bone", Material.BONE, new String[]{}));
+        materials.add(new MaterialInfo("Sugar", Material.SUGAR, new String[]{}));
+        materials.add(new MaterialInfo("Cake", Material.CAKE, new String[]{}));
+        materials.add(new MaterialInfo("Bed", Material.BED, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Repeater", Material.DIODE, new String[]{}));
+        materials.add(new MaterialInfo("Cookie", Material.COOKIE, new String[]{}));
+        materials.add(new MaterialInfo("Map", Material.MAP, new String[]{}));
+        materials.add(new MaterialInfo("Shears", Material.SHEARS, new String[]{}));
+        materials.add(new MaterialInfo("Melon", Material.MELON, new String[]{}));
+        materials.add(new MaterialInfo("Pumpkin Seeds", Material.PUMPKIN_SEEDS, new String[]{}));
+        materials.add(new MaterialInfo("Melon Seeds", Material.MELON_SEEDS, new String[]{}));
+        materials.add(new MaterialInfo("Raw Beef", Material.RAW_BEEF, new String[]{}));
+        materials.add(new MaterialInfo("Steak", Material.COOKED_BEEF, new String[]{}));
+        materials.add(new MaterialInfo("Raw Chicken", Material.RAW_CHICKEN, new String[]{}));
+        materials.add(new MaterialInfo("Cooked Chicken", Material.COOKED_CHICKEN, new String[]{}));
+        materials.add(new MaterialInfo("Rotten Flesh", Material.ROTTEN_FLESH, new String[]{}));
+        materials.add(new MaterialInfo("Ender Pearl", Material.ENDER_PEARL, new String[]{}));
+        materials.add(new MaterialInfo("Blaze Rod", Material.BLAZE_ROD, new String[]{}));
+        materials.add(new MaterialInfo("Ghast Tear", Material.GHAST_TEAR, new String[]{}));
+        materials.add(new MaterialInfo("Gold Nugget", Material.GOLD_NUGGET, new String[]{}));
+        materials.add(new MaterialInfo("Nether Wart", Material.NETHER_STALK, new String[]{}));
+        materials.add(new MaterialInfo("Water Bottle", Material.POTION, new String[]{}));
+        //todo potions maybe?
+        materials.add(new MaterialInfo("Glass Bottle", Material.GLASS_BOTTLE, new String[]{}));
+        materials.add(new MaterialInfo("Spider Eye", Material.SPIDER_EYE, new String[]{}));
+        materials.add(new MaterialInfo("Fermented Spider Eye", Material.FERMENTED_SPIDER_EYE, new String[]{}));
+        materials.add(new MaterialInfo("Blaze Powder", Material.BLAZE_POWDER, new String[]{}));
+        materials.add(new MaterialInfo("Magma Cream", Material.MAGMA_CREAM, new String[]{}));
+        materials.add(new MaterialInfo("Brewing Stand", Material.BREWING_STAND_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Cauldron", Material.CAULDRON_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Eye of Ender", Material.EYE_OF_ENDER, new String[]{}));
+        materials.add(new MaterialInfo("Glistering Melon", Material.SPECKLED_MELON, new String[]{}));
+        materials.add(new MaterialInfo("Monster Egg", Material.MONSTER_EGG, new String[]{}));
+        //todo monster eggs
+        materials.add(new MaterialInfo("Bottle o' Enchanting", Material.EXP_BOTTLE, new String[]{}));
+        materials.add(new MaterialInfo("Fireball", Material.FIREBALL, new String[]{}));
+        materials.add(new MaterialInfo("Book and Quill", Material.BOOK_AND_QUILL, new String[]{}));
+        materials.add(new MaterialInfo("Written Book", Material.WRITTEN_BOOK, new String[]{}));
+        materials.add(new MaterialInfo("Emerald", Material.EMERALD, new String[]{}));
+        materials.add(new MaterialInfo("Item Frame", Material.ITEM_FRAME, new String[]{}));
+        materials.add(new MaterialInfo("Flower Pot", Material.FLOWER_POT_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Carrot", Material.CARROT_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Potato", Material.POTATO_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Baked Potato", Material.BAKED_POTATO, new String[]{}));
+        materials.add(new MaterialInfo("Poisonous Potato", Material.POISONOUS_POTATO, new String[]{}));
+        materials.add(new MaterialInfo("Empty Map", Material.EMPTY_MAP, new String[]{}));
+        materials.add(new MaterialInfo("Golden Carrot", Material.GOLDEN_CARROT, new String[]{}));
+        materials.add(new MaterialInfo("Skull", Material.SKULL_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Carrot on a Stick", Material.CARROT_STICK, new String[]{}));
+        materials.add(new MaterialInfo("Nether Star", Material.NETHER_STAR, new String[]{}));
+        materials.add(new MaterialInfo("Pumpkin Pie", Material.PUMPKIN_PIE, new String[]{}));
+        materials.add(new MaterialInfo("Firework", Material.FIREWORK, new String[]{}));
+        materials.add(new MaterialInfo("Firework Charge", Material.FIREWORK_CHARGE, new String[]{}));
+        materials.add(new MaterialInfo("Enchanted Book", Material.ENCHANTED_BOOK, new String[]{}));
+        materials.add(new MaterialInfo("Redstone Comparator", Material.REDSTONE_COMPARATOR, new String[]{}));
+        materials.add(new MaterialInfo("Nether Brick", Material.NETHER_BRICK_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Quartz", Material.QUARTZ, new String[]{}));
+        materials.add(new MaterialInfo("Minecart with TNT", Material.EXPLOSIVE_MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Minecart with Hopper", Material.HOPPER_MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Prismarine Shard", Material.PRISMARINE_SHARD, new String[]{}));
+        materials.add(new MaterialInfo("Prismarine Crystals", Material.PRISMARINE_CRYSTALS, new String[]{}));
+        materials.add(new MaterialInfo("Raw Rabbit", Material.RABBIT, new String[]{}));
+        materials.add(new MaterialInfo("Cooked Rabbit", Material.COOKED_RABBIT, new String[]{}));
+        materials.add(new MaterialInfo("Rabbit Stew", Material.RABBIT_STEW, new String[]{}));
+        materials.add(new MaterialInfo("Rabbit's Foot", Material.RABBIT_FOOT, new String[]{}));
+        materials.add(new MaterialInfo("Rabbit Hide", Material.RABBIT_HIDE, new String[]{}));
+        materials.add(new MaterialInfo("Armor Stand", Material.ARMOR_STAND, new String[]{}));
+        materials.add(new MaterialInfo("Iron Horse Armor", Material.IRON_BARDING, new String[]{}));
+        materials.add(new MaterialInfo("Gold Horse Armor", Material.GOLD_BARDING, new String[]{}));
+        materials.add(new MaterialInfo("Diamond Horse Armor", Material.DIAMOND_BARDING, new String[]{}));
+        materials.add(new MaterialInfo("Lead", Material.LEASH, new String[]{}));
+        materials.add(new MaterialInfo("Name Tag", Material.NAME_TAG, new String[]{}));
+        materials.add(new MaterialInfo("Minecart with Command Block", Material.COMMAND_MINECART, new String[]{}));
+        materials.add(new MaterialInfo("Raw Mutton", Material.MUTTON, new String[]{}));
+        materials.add(new MaterialInfo("Cooked Mutton", Material.COOKED_MUTTON, new String[]{}));
+        materials.add(new MaterialInfo("Black Banner", Material.BANNER, new String[]{}));
+        materials.add(new MaterialInfo("Red Banner", Material.BANNER, new String[]{}, (short) 1));
+        materials.add(new MaterialInfo("Green Banner", Material.BANNER, new String[]{}, (short) 2));
+        materials.add(new MaterialInfo("Brown Banner", Material.BANNER, new String[]{}, (short) 3));
+        materials.add(new MaterialInfo("Blue Banner", Material.BANNER, new String[]{}, (short) 4));
+        materials.add(new MaterialInfo("Purple Banner", Material.BANNER, new String[]{}, (short) 5));
+        materials.add(new MaterialInfo("Cyan Banner", Material.BANNER, new String[]{}, (short) 6));
+        materials.add(new MaterialInfo("Light Gray Banner", Material.BANNER, new String[]{}, (short) 7));
+        materials.add(new MaterialInfo("Gray Banner", Material.BANNER, new String[]{}, (short) 8));
+        materials.add(new MaterialInfo("Pink Banner", Material.BANNER, new String[]{}, (short) 9));
+        materials.add(new MaterialInfo("Lime Banner", Material.BANNER, new String[]{}, (short) 10));
+        materials.add(new MaterialInfo("Yellow Banner", Material.BANNER, new String[]{}, (short) 11));
+        materials.add(new MaterialInfo("Light Blue Banner", Material.BANNER, new String[]{}, (short) 12));
+        materials.add(new MaterialInfo("Magenta Banner", Material.BANNER, new String[]{}, (short) 13));
+        materials.add(new MaterialInfo("Orange Banner", Material.BANNER, new String[]{}, (short) 14));
+        materials.add(new MaterialInfo("White Banner", Material.BANNER, new String[]{}, (short) 15));
+        materials.add(new MaterialInfo("Spruce Door", Material.SPRUCE_DOOR_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Birch Door", Material.BIRCH_DOOR_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Jungle Door", Material.JUNGLE_DOOR_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Acacia Door", Material.ACACIA_DOOR_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Dark Oak Door", Material.DARK_OAK_DOOR_ITEM, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk 13", Material.GOLD_RECORD, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk cat", Material.GREEN_RECORD, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk blocks", Material.RECORD_3, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk chirp", Material.RECORD_4, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk far", Material.RECORD_5, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk mall", Material.RECORD_6, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk mellohi", Material.RECORD_7, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk stal", Material.RECORD_8, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk strad", Material.RECORD_9, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk ward", Material.RECORD_10, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk 11", Material.RECORD_11, new String[]{}));
+        materials.add(new MaterialInfo("Music Disk wait", Material.RECORD_12, new String[]{}));
+    }
+
+    public static MaterialInfo getItemByName(String name) {
+        for (MaterialInfo material : materials) {
+            if (material.name.equalsIgnoreCase(name)) {
+                return material;
+            }
+        }
+        return null;
+    }
+
+    public static MaterialInfo getItemByMaterial(Material material) {
+        return getItemByMaterial(material, 0);
+    }
+
+    public static MaterialInfo getItemByMaterial(Material material, int durability) {
+        for (MaterialInfo materialInfo : materials) {
+            if (materialInfo.material == material && materialInfo.specificDurability == durability) {
+                return materialInfo;
+            }
+        }
+        return null;
+    }
+
+    public static class MaterialInfo {
+        public final Material material;
+        public final short specificDurability;
+        public final String name;
+        public final String[] otherNames;
+
+        public MaterialInfo(String name, Material material, String[] otherNames) {
+            this.material = material;
+            this.name = name;
+            this.otherNames = otherNames;
+            this.specificDurability = 0;
+        }
+
+        public MaterialInfo(String name, Material material, String[] otherNames, short specificDurability) {
+            this.material = material;
+            this.name = name;
+            this.otherNames = otherNames;
+            this.specificDurability = specificDurability;
+        }
+
+        public Material getType() {
+            return material;
+        }
+
+        public short getSpecificDurability() {
+            return specificDurability;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ItemStack asStack() {
+            return new ItemStack(this.material, 1, specificDurability);
+        }
+
+        @Override
+        public String toString() {
+            Map<String, Object> map = new HashMap<>();
+            map.put("material", "Material." + material.name());
+            map.put("specificDurability", specificDurability);
+            map.put("name", name);
+            map.put("otherNames", Arrays.toString(otherNames));
+            return map.toString();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            } else if (this == obj) {
+                return true;
+            } else if (!(obj instanceof MaterialInfo)) {
+                return false;
+            } else {
+                return ((MaterialInfo) obj).material == material &&
+                        ((MaterialInfo) obj).name.equals(name) &&
+                        Arrays.equals(((MaterialInfo) obj).otherNames, otherNames) &&
+                        ((MaterialInfo) obj).specificDurability == specificDurability;
+            }
+        }
+    }
+}

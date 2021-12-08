@@ -1,0 +1,25 @@
+main: me.rey.Main
+name: Tribes
+version: 1.0.0
+author: Rey, Macho
+depend: [ Parser ]
+
+commands:
+  focus:
+  unfocus:
+  c:
+    aliases: [ clan, clans, faction, factions, tribe, tribes, t ]
+  ac:
+    aliases: [ allychat ]
+  cc:
+    aliases: [ clanchat ]
+  kill:
+    aliases: [ suicide ]
+  pvptimer:
+  pvpenable:
+  cmo:
+  fenergy:
+  toggletestmode:
+  legendary:
+  skill:
+  equip:
