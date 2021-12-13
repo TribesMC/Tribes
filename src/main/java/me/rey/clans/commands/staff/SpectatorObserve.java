@@ -1,9 +1,11 @@
 package me.rey.clans.commands.staff;
 
+import me.rey.clans.Tribes;
 import me.rey.clans.clans.ClansRank;
 import me.rey.clans.commands.ClansCommand;
 import me.rey.clans.commands.SubCommand;
 import me.rey.clans.enums.CommandType;
+import me.rey.clans.features.incognito.IncognitoManager;
 import me.rey.core.players.User;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -38,9 +40,11 @@ public class SpectatorObserve extends ClansCommand {
         if (player.getGameMode() != GameMode.SPECTATOR) {
             player.setGameMode(GameMode.SPECTATOR);
             new User(player).sendMessageWithPrefix("Observe", "You have entered spectator observe mode!");
+            Tribes.getInstance().getIncognito().setIncognitoType(player, IncognitoManager.IncognitoType.CMO);
         } else {
             player.setGameMode(oldGamemodes.getOrDefault(player.getUniqueId(), Bukkit.getServer().getDefaultGameMode()));
             new User(player).sendMessageWithPrefix("Observe", "You have left spectator observe mode!");
+            Tribes.getInstance().getIncognito().removeIncognitoType(player);
         }
     }
 

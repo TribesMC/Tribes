@@ -30,6 +30,10 @@ public class Kill extends ClansCommand {
         if (sender.isOp() && args.length > 0) {
             try {
                 player = Bukkit.getPlayer(args[0]);
+                if (player == null || !player.isValid() || !player.isOnline()) {
+                    this.sendMessageWithPrefix("Kill", "&s" + args[0] + " &ris not online!");
+                    return;
+                }
             } catch (final Exception e) {
                 e.printStackTrace();
             }

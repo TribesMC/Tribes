@@ -30,7 +30,6 @@ public class PlayerJoin implements Listener {
 
     @EventHandler
     public void onQuit(final PlayerQuitEvent e) {
-        Tribes.getInstance().createCombatLogger(e.getPlayer());
         Tribes.getInstance().getPvpTimer().unloadPlayer(e.getPlayer());
         e.setQuitMessage(Text.color("&8Quit> &7" + e.getPlayer().getName()));
     }

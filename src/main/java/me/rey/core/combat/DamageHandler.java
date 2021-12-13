@@ -11,6 +11,7 @@ import me.rey.core.players.combat.PlayerHitCache;
 import me.rey.core.pvp.ToolType;
 import me.rey.core.pvp.ToolType.HitType;
 import me.rey.core.utils.Text;
+import me.rey.core.utils.UtilEntity;
 import me.rey.core.utils.UtilVelocity;
 import net.minecraft.server.v1_8_R3.AttributeModifier;
 import org.bukkit.Bukkit;
@@ -42,7 +43,6 @@ public class DamageHandler implements Listener {
 
 		if (!(e.getEntity() instanceof LivingEntity)) return;
 		if (e.isCancelled()) return;
-
 		/*
 		 * HIT DELAY
 		 */
@@ -64,6 +64,7 @@ public class DamageHandler implements Listener {
 			damager = (LivingEntity) ((Projectile) damager).getShooter();
 			hitType = e.getDamager() instanceof Arrow ? HitType.ARCHERY : HitType.OTHER;
 		}
+
 
 		/* Cancelling if it's own hit */
 		if (damager instanceof Player && damagee instanceof Player && damager.getUniqueId().equals(damagee.getUniqueId())) {
@@ -173,9 +174,15 @@ public class DamageHandler implements Listener {
 			/* Cancelling KB if dead */
 			double health = ((LivingEntity) e.getEntity()).getHealth();
 			if (e.getEntity().isDead() || health <= 0) kbEvent.setCancelled(true);
-			
+
 			if(!kbEvent.isCancelled())
 				kb(kbEvent.getDamagee(), kbEvent.getDamager(), kbEvent.getDamage(), kbEvent.getMult());
+
+			if ((e.getEntity().isDead() || health <= 0) && !(e.getEntity() instanceof Player) && (e.getEntity() instanceof LivingEntity)) {
+				UtilEntity.EntityInfo info;
+
+				Bukkit.getPluginManager().callEvent(new MobDeathEvent((LivingEntity) e.getEntity(), e.getDamager(), ((info = UtilEntity.getEntityByType(e.getEntity().getType())) != null ? info.calculateDrops(e.getEntity(), false) : null), e));
+			}
 		}
 	}
 	

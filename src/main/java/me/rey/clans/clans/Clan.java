@@ -528,6 +528,11 @@ public class Clan {
         return allies >= References.MAX_ALLIES;
     }
 
+    public boolean isAlliedTo(Clan clan) {
+        ClanRelations relation = getClanRelation(clan.uuid);
+        return relation == ClanRelations.ALLY;
+    }
+
     //  ------------------------------------------- REMOVED
 //	public boolean hasMaxTruces() {
 //		int allies = 0;

@@ -23,12 +23,16 @@ public class PlayerRunnableHandler extends BukkitRunnable {
 	public void start() {
 		this.runTaskTimer(plugin, 0, 1);
 	}
-	
+
+	int maxTick = UpdateEvent.TickType.values()[0].ticks, tick = 0;
+
 	@Override
 	public void run() {
-		
-		UpdateEvent updateEvent = new UpdateEvent();
-		Bukkit.getServer().getPluginManager().callEvent(updateEvent);
+		if (tick > maxTick) {
+			tick = 0;
+		}
+		tick++;
+		Bukkit.getServer().getPluginManager().callEvent(new UpdateEvent(tick));
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			

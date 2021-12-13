@@ -42,10 +42,9 @@ public class DebugWeaponListener extends MiscItem {
         if (!event.getDamager().isOp()) {
             //todo make this check better
             new User((Player) event.getDamager()).sendMessageWithPrefix("Debug", "You are not supposed to have this item!");
-            return;
+        } else {
+            UtilEnt.damage(1000000.0d, ChatColor.RED + "Debug Weapon", event.getDamagee(), event.getDamager());
         }
-
-        UtilEnt.damage(1000000.0d, ChatColor.RED + "Debug Stick", event.getDamagee(), event.getDamager());
     }
 
     @EventHandler
@@ -63,11 +62,9 @@ public class DebugWeaponListener extends MiscItem {
             return;
         }
         if (!event.getDamager().isOp()) {
-            //todo make this check better
             new User((Player) event.getDamager()).sendMessageWithPrefix("Debug", "You are not supposed to have this item!");
-            return;
+        } else {
+            UtilEnt.damage(1000000.0d, "Debug Weapon", (LivingEntity) event.getEntity(), (LivingEntity) event.getDamager());
         }
-
-        UtilEnt.damage(1000000.0d, "Debug Stick", (LivingEntity) event.getEntity(), (LivingEntity) event.getDamager());
     }
 }

@@ -12,6 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ public class PlayerDeathHandler implements Listener {
     PlayerHitCache cache = Warriors.getInstance().getHitCache();
 
     @EventHandler
-    public void onPlayerDeath(final org.bukkit.event.entity.PlayerDeathEvent e) {
+    public void onPlayerDeath(PlayerDeathEvent e) {
 
         final Player player = e.getEntity();
 
@@ -49,7 +52,7 @@ public class PlayerDeathHandler implements Listener {
                 Bukkit.broadcastMessage(Text.color(deathEvent.getDeathMessage().get()));
             }
 
-            // SENIDNG THEM THEIR DEATH SUMMARY
+            // SENDING THEM THEIR DEATH SUMMARY
             int index = 1;
             for (final PlayerHit hit : playerCache) {
                 final String cause = hit.hasCause() ? hit.getCause() : null;

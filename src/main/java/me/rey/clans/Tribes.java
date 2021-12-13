@@ -8,6 +8,7 @@ import me.rey.clans.commands.base.Base;
 import me.rey.clans.commands.staff.Legendary;
 import me.rey.clans.commands.staff.PvpTimerCmd;
 import me.rey.clans.commands.staff.SpectatorObserve;
+import me.rey.clans.commands.staff.loggers.Loggers;
 import me.rey.clans.commands.test.FreezeEnergy;
 import me.rey.clans.commands.test.TestMode;
 import me.rey.clans.currency.PickupBalance;
@@ -15,6 +16,9 @@ import me.rey.clans.database.SQLManager;
 import me.rey.clans.database.local.LocalSQLiteManager;
 import me.rey.clans.events.*;
 import me.rey.clans.features.*;
+import me.rey.clans.features.combatlogger.CombatLogger;
+import me.rey.clans.features.hologram.HologramManager;
+import me.rey.clans.features.incognito.IncognitoManager;
 import me.rey.clans.gui.ConfirmationGUI;
 import me.rey.clans.items.crafting.*;
 import me.rey.clans.items.crafting.marksman.*;
@@ -53,6 +57,9 @@ public class Tribes extends Module {
     private PlayerInfo info;
     private PvpTimer pvpTimer;
     private SpecialItemUpdater specialItemUpdater;
+    private CombatLogger combatLogger;
+    private IncognitoManager incognito;
+    private HologramManager hologramManager;
 
     public Tribes(final JavaPlugin plugin) {
         super("Tribes", plugin);
@@ -164,6 +171,18 @@ public class Tribes extends Module {
             w.setDifficulty(Difficulty.EASY);
         }
 
+        /*
+         * COMBAT LOGGER
+         */
+
+        incognito = new IncognitoManager();
+        incognito.onEnable();
+
+        combatLogger = new CombatLogger();
+        combatLogger.onEnable();
+
+        hologramManager = new HologramManager();
+        hologramManager.onEnable();
     }
 
     /*
@@ -175,6 +194,8 @@ public class Tribes extends Module {
         /* Resetting all fields ores in cache */
         Fields.fieldsOres.forEach(Fields.FieldsOre::replaceForcefully);
 
+        combatLogger.onDisable();
+        incognito.onDisable();
 
         this.sql.onDisable();
     }
@@ -221,7 +242,8 @@ public class Tribes extends Module {
                 new SpectatorObserve(),
                 new FreezeEnergy(),
                 new TestMode(),
-                new Legendary()
+                new Legendary(),
+                new Loggers()
         ));
     }
 
@@ -310,10 +332,6 @@ public class Tribes extends Module {
         return null;
     }
 
-    public CombatLogger createCombatLogger(final Player player) {
-        return new CombatLogger(player);
-    }
-
     public ServerParser getServerParser() {
         return this.stp;
     }
@@ -325,5 +343,17 @@ public class Tribes extends Module {
     public boolean isInSafezone(final Location loc) {
         final String self = String.format("%s;%s;%s", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         return Tribes.safeZoneCoords.contains(self);
+    }
+
+    public CombatLogger getCombatLogger() {
+        return combatLogger;
+    }
+
+    public IncognitoManager getIncognito() {
+        return incognito;
+    }
+
+    public HologramManager getHologramManager() {
+        return hologramManager;
     }
 }
