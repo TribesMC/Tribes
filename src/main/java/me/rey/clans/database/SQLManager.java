@@ -2,8 +2,12 @@ package me.rey.clans.database;
 
 import me.rey.clans.Tribes;
 import me.rey.clans.clans.*;
+import me.rey.clans.features.punishments.Punishment;
+import me.rey.clans.features.punishments.PunishmentCategory;
+import me.rey.clans.features.punishments.PunishmentType;
 import me.rey.clans.playerdisplay.PlayerInfo;
 import me.rey.clans.utils.References;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,13 +18,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class SQLManager {
+
+    //todo this all needs to be changed to work on a different thread
 
     private final JavaPlugin plugin;
     private final ConnectionPoolManager pool;
@@ -43,7 +46,7 @@ public class SQLManager {
 
     private void makeTable() {
         Connection conn = null;
-        PreparedStatement ps = null, ps2 = null, ps3 = null;
+        PreparedStatement ps = null, ps2 = null, ps3 = null, ps4 = null;
 
         try {
             conn = this.pool.getConnection();
@@ -71,12 +74,37 @@ public class SQLManager {
             );
             ps3.executeUpdate();
 
+            ps4 = conn.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS `punishments` " +
+                            "(" +
+                            "`id` int NOT NULL AUTO_INCREMENT, " +
+                            "`player` char(36) NOT NULL, " +
+                            "`type` int NOT NULL, " +
+                            "`category` int NOT NULL, " +
+                            "`reason` varchar(256) NOT NULL, " +
+                            "`staff` varchar(256) NOT NULL, " +
+                            "`hours` double NOT NULL, " +
+                            "`severity` int NOT NULL, " +
+                            "`time` datetime NOT NULL, " +
+                            "`removed` tinyint(1) NOT NULL DEFAULT '0', " +
+                            "`removeStaff` varchar(256) NULL, " +
+                            "`removeReason` varchar(256) NULL, " +
+                            "`removedAt` varchar(256) NULL, " +
+                            "`reapplyStaff` varchar(256) NULL, " +
+                            "`reapplyReason` varchar(256) NULL, " +
+                            "`reappliedAt` varchar(256) NULL, " +
+                            "PRIMARY KEY (`id`)" +
+                            ")"
+            );
+            ps4.executeUpdate();
+
         } catch (final SQLException e) {
             e.printStackTrace();
         } finally {
             this.pool.close(conn, ps, null);
             this.pool.close(null, ps2, null);
             this.pool.close(null, ps3, null);
+            this.pool.close(null, ps4, null);
         }
     }
 
@@ -1208,5 +1236,90 @@ public class SQLManager {
     public String getResetId() {
         final String setting = this.getSetting(this.resetIdSetting);
         return setting != null ? setting : "0";
+    }
+
+    public void uploadPunishment(Punishment punishment) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = this.pool.getConnection();
+
+            int id = -1;
+
+            ps = conn.prepareStatement("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = ?");
+            ps.setString(1, "punishments");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("AUTO_INCREMENT");
+            }
+
+            if (id == -1) {
+                throw new SQLException("could not get new punishment ID");
+            }
+
+            punishment.setId(id);
+
+            String stmt = "INSERT INTO `punishments` (player, type, category, reason, staff, hours, severity, time, removed) VALUES (?,?,?,?,?,?,?,?,?)";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setString(1, punishment.getPlayer().toString());
+            ps.setInt(2, punishment.getPunishmentType().getDbIdentifier());
+            ps.setInt(3, punishment.getCategory().getDbIdentifier());
+            ps.setString(4, punishment.getReason());
+            ps.setString(5, punishment.getStaff());
+            ps.setDouble(6, punishment.getHours());
+            ps.setInt(7, punishment.getSeverity());
+            ps.setTimestamp(8, new Timestamp(punishment.getTime()));
+            ps.setBoolean(9, punishment.isRemoved());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, null);
+        }
+    }
+
+    public List<Punishment> getPunishments(UUID uuid, int limit) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        List<Punishment> punishments = new ArrayList<>();
+
+        try {
+            conn = this.pool.getConnection();
+
+            String stmt = "SELECT " + (limit == -1 ? "*" : "(" + limit + ")") + " FROM `punishments` WHERE `uuid` = ? ORDER BY `time` DESC";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setString(1, uuid.toString());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                punishments.add(new Punishment(
+                        rs.getInt("id"),
+                        UUID.fromString(rs.getString("player")),
+                        PunishmentType.getValue(rs.getInt("type")),
+                        PunishmentCategory.getValue(rs.getInt("category")),
+                        rs.getString("reason"),
+                        rs.getString("staff"),
+                        rs.getDouble("hours"),
+                        rs.getInt("severity"),
+                        rs.getTimestamp("time") != null ? rs.getTimestamp("time").getTime() : -1,
+                        rs.getBoolean("removed"),
+                        rs.getString("removeStaff"),
+                        rs.getString("removeReason"),
+                        rs.getTimestamp("removeAt") != null ? rs.getTimestamp("removeAt").getTime() : -1,
+                        rs.getString("reapplyStaff"),
+                        rs.getString("reapplyReason"),
+                        rs.getTimestamp("reappliedAt") != null ? rs.getTimestamp("reappliedAt").getTime() : -1
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, null);
+        }
+        return punishments;
     }
 }

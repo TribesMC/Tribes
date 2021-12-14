@@ -6,6 +6,7 @@ import me.rey.clans.clans.WarriorsTeamHandler;
 import me.rey.clans.commands.*;
 import me.rey.clans.commands.base.Base;
 import me.rey.clans.commands.staff.Legendary;
+import me.rey.clans.commands.staff.Punish;
 import me.rey.clans.commands.staff.PvpTimerCmd;
 import me.rey.clans.commands.staff.SpectatorObserve;
 import me.rey.clans.commands.staff.loggers.Loggers;
@@ -19,6 +20,7 @@ import me.rey.clans.features.*;
 import me.rey.clans.features.combatlogger.CombatLogger;
 import me.rey.clans.features.hologram.HologramManager;
 import me.rey.clans.features.incognito.IncognitoManager;
+import me.rey.clans.features.punishments.PunishmentManager;
 import me.rey.clans.gui.ConfirmationGUI;
 import me.rey.clans.items.crafting.*;
 import me.rey.clans.items.crafting.marksman.*;
@@ -60,6 +62,7 @@ public class Tribes extends Module {
     private CombatLogger combatLogger;
     private IncognitoManager incognito;
     private HologramManager hologramManager;
+    private PunishmentManager punishmentManager;
 
     public Tribes(final JavaPlugin plugin) {
         super("Tribes", plugin);
@@ -175,6 +178,9 @@ public class Tribes extends Module {
          * COMBAT LOGGER
          */
 
+        punishmentManager = new PunishmentManager();
+        punishmentManager.onEnable();
+
         incognito = new IncognitoManager();
         incognito.onEnable();
 
@@ -194,8 +200,10 @@ public class Tribes extends Module {
         /* Resetting all fields ores in cache */
         Fields.fieldsOres.forEach(Fields.FieldsOre::replaceForcefully);
 
+        hologramManager.onDisable();
         combatLogger.onDisable();
         incognito.onDisable();
+        punishmentManager.onDisable();
 
         this.sql.onDisable();
     }
@@ -243,7 +251,8 @@ public class Tribes extends Module {
                 new FreezeEnergy(),
                 new TestMode(),
                 new Legendary(),
-                new Loggers()
+                new Loggers(),
+                new Punish()
         ));
     }
 
@@ -355,5 +364,9 @@ public class Tribes extends Module {
 
     public HologramManager getHologramManager() {
         return hologramManager;
+    }
+
+    public PunishmentManager getPunishmentManager() {
+        return punishmentManager;
     }
 }
