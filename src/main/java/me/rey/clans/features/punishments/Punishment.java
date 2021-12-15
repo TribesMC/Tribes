@@ -115,6 +115,14 @@ public class Punishment {
         return removed || (removed = (hours > 0 && (time + (hours * 1000) > System.currentTimeMillis())));
     }
 
+    public boolean wasRemoved() {
+        return removed;
+    }
+
+    public boolean wasReactivated() {
+        return reapplyStaff != null;
+    }
+
     public boolean isReactivated() {
         return !removed && reapplyStaff != null;
     }

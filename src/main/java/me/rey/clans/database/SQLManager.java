@@ -1260,7 +1260,7 @@ public class SQLManager {
 
             punishment.setId(id);
 
-            String stmt = "INSERT INTO `punishments` (player, type, category, reason, staff, hours, severity, time, removed) VALUES (?,?,?,?,?,?,?,?,?)";
+            String stmt = "INSERT INTO `punishments` (player, type, category, reason, staff, hours, severity, time) VALUES (?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(stmt);
 
             ps.setString(1, punishment.getPlayer().toString());
@@ -1271,7 +1271,6 @@ public class SQLManager {
             ps.setDouble(6, punishment.getHours());
             ps.setInt(7, punishment.getSeverity());
             ps.setTimestamp(8, new Timestamp(punishment.getTime()));
-            ps.setBoolean(9, punishment.isRemoved());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -1289,7 +1288,7 @@ public class SQLManager {
         try {
             conn = this.pool.getConnection();
 
-            String stmt = "SELECT " + (limit == -1 ? "*" : "(" + limit + ")") + " FROM `punishments` WHERE `uuid` = ? ORDER BY `time` DESC";
+            String stmt = "SELECT " + (limit == -1 ? "*" : "(" + limit + ")") + " FROM `punishments` WHERE `player` = ? ORDER BY `time` DESC";
             ps = conn.prepareStatement(stmt);
 
             ps.setString(1, uuid.toString());
@@ -1309,7 +1308,7 @@ public class SQLManager {
                         rs.getBoolean("removed"),
                         rs.getString("removeStaff"),
                         rs.getString("removeReason"),
-                        rs.getTimestamp("removeAt") != null ? rs.getTimestamp("removeAt").getTime() : -1,
+                        rs.getTimestamp("removedAt") != null ? rs.getTimestamp("removeAt").getTime() : -1,
                         rs.getString("reapplyStaff"),
                         rs.getString("reapplyReason"),
                         rs.getTimestamp("reappliedAt") != null ? rs.getTimestamp("reappliedAt").getTime() : -1

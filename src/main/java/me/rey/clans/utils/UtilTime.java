@@ -2,6 +2,7 @@ package me.rey.clans.utils;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -128,5 +129,52 @@ public class UtilTime {
             map.put("milliseconds", milliseconds);
             return map.toString();
         }
+    }
+
+    public static String getTimeDate(long milliseconds) {
+        milliseconds -= 18000000; // making it EST
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        String str = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        if (str.endsWith("1")) {
+            str += "st";
+        } else if (str.endsWith("2")) {
+            str += "nd";
+        } else if (str.endsWith("3")) {
+            str += "rd";
+        } else {
+            str += "th";
+        }
+        str += " ";
+        str += calendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.US);
+        str += " ";
+        str += calendar.get(Calendar.YEAR);
+        str += " (";
+        String minute = String.valueOf(calendar.get(Calendar.MINUTE));
+        str += calendar.get(Calendar.HOUR_OF_DAY) + ":" + (minute.length() == 2 ? minute : "0" + minute) + " " + calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.US);
+        str += ") [EST]";
+        return str;
+    }
+
+    public static String toDatabaseDate(long milliseconds) {
+        Calendar date = Calendar.getInstance();
+        date.setTimeInMillis(milliseconds);
+
+        return date.get(Calendar.YEAR) +
+                "-" +
+                validateDatePart(Integer.toString(date.get(Calendar.MONTH))) +
+                "-" +
+                validateDatePart(Integer.toString(date.get(Calendar.DAY_OF_MONTH))) +
+                "T" +
+                validateDatePart(Integer.toString(date.get(Calendar.HOUR))) +
+                ":" +
+                validateDatePart(Integer.toString(date.get(Calendar.MINUTE))) +
+                ":" +
+                validateDatePart(Integer.toString(date.get(Calendar.SECOND)));
+    }
+
+    private static String validateDatePart(String datePart) {
+        if (datePart.length() == 1) return "0" + datePart;
+        return datePart;
     }
 }

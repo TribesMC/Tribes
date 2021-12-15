@@ -9,6 +9,7 @@ import me.rey.clans.utils.UtilTime;
 import me.rey.core.gui.GuiItem;
 import me.rey.core.utils.ItemBuilder;
 import me.rey.core.utils.UtilText;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -16,7 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PunishMenu extends GuiEditable {
 
@@ -61,21 +64,130 @@ public class PunishMenu extends GuiEditable {
          * Left Side Buttons
          */
 
-        setPunishmentButton(0, new ItemBuilder(Material.PAPER)
+        List<Punishment> warnings = new ArrayList<>();
+        List<Punishment> kicks = new ArrayList<>();
+        List<Punishment> reportBans = new ArrayList<>();
+        List<Punishment> permanentMutes = new ArrayList<>();
+        List<Punishment> permanentBans = new ArrayList<>();
+        for (Punishment punishment : punishments) {
+            switch (punishment.getCategory()) {
+                case KICK:
+                    kicks.add(punishment);
+                    break;
+                case WARN:
+                    warnings.add(punishment);
+                    break;
+                case PERM_BAN:
+                    permanentBans.add(punishment);
+                    break;
+                case PERM_MUTE:
+                    permanentMutes.add(punishment);
+                    break;
+                case REPORT:
+                    reportBans.add(punishment);
+                    break;
+            }
+        }
+        setPunishmentButton(9, new ItemBuilder(Material.PAPER)
                 .setDisplayName(green + "Warning")
-                .build());
-        setPunishmentButton(9, new ItemBuilder(Material.FEATHER)
+                .addLore(ChatColor.WHITE + "Past Warnings: " + ChatColor.YELLOW + warnings.size())
+                .addLore(!warnings.isEmpty(), "")
+                .addLore(!warnings.isEmpty(), UtilText.wrap(ChatColor.WHITE + "Last Warning: " + ChatColor.YELLOW + (!warnings.isEmpty() ? warnings.get(0).getReason() : "None"), 36).toArray(new String[0]))
+                .addLore(!warnings.isEmpty(), UtilText.wrap(ChatColor.WHITE + "At: " + ChatColor.YELLOW + UtilTime.getTimeDate(!warnings.isEmpty() ? warnings.get(0).getTime() : 0) + " (" + UtilTime.convert(!warnings.isEmpty() ? System.currentTimeMillis() - warnings.get(0).getTime() : 0, 0, UtilTime.getBestUnit(!warnings.isEmpty() ? System.currentTimeMillis() - warnings.get(0).getTime() : 0)) + " " + UtilTime.getBestUnit(!warnings.isEmpty() ? System.currentTimeMillis() - warnings.get(0).getTime() : 0).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .build(), (player, type, slot) -> {
+            Punishment punishment = new Punishment(
+                    target.getUniqueId(),
+                    PunishmentType.WARN,
+                    PunishmentCategory.WARN,
+                    reason,
+                    "UUID:" + player.getUniqueId().toString(),
+                    -1,
+                    1,
+                    System.currentTimeMillis()
+            );
+            Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
+            player.closeInventory();
+        });
+        setPunishmentButton(18, new ItemBuilder(Material.FEATHER)
                 .setDisplayName(green + "Kick")
-                .build());
-        setPunishmentButton(18, new ItemBuilder(Material.BOOK)
+                .addLore(ChatColor.WHITE + "Past Kicks: " + ChatColor.YELLOW + kicks.size())
+                .addLore(!kicks.isEmpty(), "")
+                .addLore(!kicks.isEmpty(), UtilText.wrap(ChatColor.WHITE + "Last Kick: " + ChatColor.YELLOW + (!kicks.isEmpty() ? kicks.get(0).getReason() : "None"), 36).toArray(new String[0]))
+                .addLore(!kicks.isEmpty(), UtilText.wrap(ChatColor.WHITE + "At: " + ChatColor.YELLOW + UtilTime.getTimeDate(!kicks.isEmpty() ? kicks.get(0).getTime() : 0) + " (" + UtilTime.convert(!kicks.isEmpty() ? System.currentTimeMillis() - kicks.get(0).getTime() : 0, 0, UtilTime.getBestUnit(!kicks.isEmpty() ? System.currentTimeMillis() - kicks.get(0).getTime() : 0)) + " " + UtilTime.getBestUnit(!kicks.isEmpty() ? System.currentTimeMillis() - kicks.get(0).getTime() : 0).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .build(), (player, type, slot) -> {
+            Punishment punishment = new Punishment(
+                    target.getUniqueId(),
+                    PunishmentType.KICK,
+                    PunishmentCategory.KICK,
+                    reason,
+                    "UUID:" + player.getUniqueId().toString(),
+                    -1,
+                    1,
+                    System.currentTimeMillis()
+            );
+            Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
+            player.closeInventory();
+        });
+        setPunishmentButton(27, new ItemBuilder(Material.BOOK)
                 .setDisplayName(green + "Report Ban")
-                .build());
-        setPunishmentButton(27, new ItemBuilder(Material.BOOK_AND_QUILL)
+                .addLore(ChatColor.WHITE + "Past Report Bans: " + ChatColor.YELLOW + reportBans.size())
+                .addLore(!reportBans.isEmpty(), "")
+                .addLore(!reportBans.isEmpty(), UtilText.wrap(ChatColor.WHITE + "Last Report Ban: " + ChatColor.YELLOW + (!reportBans.isEmpty() ? reportBans.get(0).getReason() : "None"), 36).toArray(new String[0]))
+                .addLore(!reportBans.isEmpty(), UtilText.wrap(ChatColor.WHITE + "At: " + ChatColor.YELLOW + UtilTime.getTimeDate(!reportBans.isEmpty() ? reportBans.get(0).getTime() : 0) + " (" + UtilTime.convert(!reportBans.isEmpty() ? System.currentTimeMillis() - reportBans.get(0).getTime() : 0, 0, UtilTime.getBestUnit(!reportBans.isEmpty() ? System.currentTimeMillis() - reportBans.get(0).getTime() : 0)) + " " + UtilTime.getBestUnit(!reportBans.isEmpty() ? System.currentTimeMillis() - reportBans.get(0).getTime() : 0).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .build(), (player, type, slot) -> {
+            Punishment punishment = new Punishment(
+                    target.getUniqueId(),
+                    PunishmentType.REPORTBAN,
+                    PunishmentCategory.REPORT,
+                    reason,
+                    "UUID:" + player.getUniqueId().toString(),
+                    -1,
+                    1,
+                    System.currentTimeMillis()
+            );
+            Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
+            player.closeInventory();
+        });
+        setPunishmentButton(36, new ItemBuilder(Material.BOOK_AND_QUILL)
                 .setDisplayName(green + "Permanent Mute")
-                .build());
-        setPunishmentButton(36, new ItemBuilder(Material.REDSTONE_BLOCK)
+                .addLore(ChatColor.WHITE + "Past Permanent Mutes: " + ChatColor.YELLOW + permanentMutes.size())
+                .addLore(!permanentMutes.isEmpty(), "")
+                .addLore(!permanentMutes.isEmpty(), UtilText.wrap(ChatColor.WHITE + "Last Permanent Mute: " + ChatColor.YELLOW + (!permanentMutes.isEmpty() ? permanentMutes.get(0).getReason() : "None"), 36).toArray(new String[0]))
+                .addLore(!permanentMutes.isEmpty(), UtilText.wrap(ChatColor.WHITE + "At: " + ChatColor.YELLOW + UtilTime.getTimeDate(!permanentMutes.isEmpty() ? permanentMutes.get(0).getTime() : 0) + " (" + UtilTime.convert(!permanentMutes.isEmpty() ? System.currentTimeMillis() - permanentMutes.get(0).getTime() : 0, 0, UtilTime.getBestUnit(!permanentMutes.isEmpty() ? System.currentTimeMillis() - permanentMutes.get(0).getTime() : 0)) + " " + UtilTime.getBestUnit(!permanentMutes.isEmpty() ? System.currentTimeMillis() - permanentMutes.get(0).getTime() : 0).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .build(), (player, type, slot) -> {
+            Punishment punishment = new Punishment(
+                    target.getUniqueId(),
+                    PunishmentType.MUTE,
+                    PunishmentCategory.PERM_MUTE,
+                    reason,
+                    "UUID:" + player.getUniqueId().toString(),
+                    -1,
+                    1,
+                    System.currentTimeMillis()
+            );
+            Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
+            player.closeInventory();
+        });
+        setPunishmentButton(45, new ItemBuilder(Material.REDSTONE_BLOCK)
                 .setDisplayName(green + "Permanent Ban")
-                .build());
+                .addLore(ChatColor.WHITE + "Past Permanent Bans: " + ChatColor.YELLOW + permanentBans.size())
+                .addLore(!permanentBans.isEmpty(), "")
+                .addLore(!permanentBans.isEmpty(), UtilText.wrap(ChatColor.WHITE + "Last Permanent Ban: " + ChatColor.YELLOW + (!permanentBans.isEmpty() ? permanentBans.get(0).getReason() : "None"), 36).toArray(new String[0]))
+                .addLore(!permanentBans.isEmpty(), UtilText.wrap(ChatColor.WHITE + "At: " + ChatColor.YELLOW + UtilTime.getTimeDate(!permanentBans.isEmpty() ? permanentBans.get(0).getTime() : 0) + " (" + UtilTime.convert(!permanentBans.isEmpty() ? System.currentTimeMillis() - permanentBans.get(0).getTime() : 0, 0, UtilTime.getBestUnit(!permanentBans.isEmpty() ? System.currentTimeMillis() - permanentBans.get(0).getTime() : 0)) + " " + UtilTime.getBestUnit(!permanentBans.isEmpty() ? System.currentTimeMillis() - permanentBans.get(0).getTime() : 0).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .build(), (player, type, slot) -> {
+            Punishment punishment = new Punishment(
+                    target.getUniqueId(),
+                    PunishmentType.BAN,
+                    PunishmentCategory.PERM_BAN,
+                    reason,
+                    "UUID:" + player.getUniqueId().toString(),
+                    -1,
+                    1,
+                    System.currentTimeMillis()
+            );
+            Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
+            player.closeInventory();
+        });
 
         /*
          * Chat Severity buttons
@@ -194,7 +306,7 @@ public class PunishMenu extends GuiEditable {
             player.closeInventory();
         });
 
-        setPunishmentSeverityButton(33, PunishmentCategory.CLIENT, 24.0d * 7.0d, 2, (player, clickType, slot) -> {
+        setPunishmentSeverityButton(33, PunishmentCategory.CLIENT, 24.0d * 14.0d, 2, (player, clickType, slot) -> {
             Punishment punishment = new Punishment(
                     target.getUniqueId(),
                     PunishmentType.BAN,
@@ -209,7 +321,7 @@ public class PunishMenu extends GuiEditable {
             player.closeInventory();
         });
 
-        setPunishmentSeverityButton(42, PunishmentCategory.CLIENT, 24.0d * 30.0d, 3, (player, clickType, slot) -> {
+        setPunishmentSeverityButton(42, PunishmentCategory.CLIENT, 24.0d * 40.0d, 3, (player, clickType, slot) -> {
             Punishment punishment = new Punishment(
                     target.getUniqueId(),
                     PunishmentType.BAN,
@@ -227,6 +339,13 @@ public class PunishMenu extends GuiEditable {
         /*
          * Minor history buttons
          */
+
+        List<Punishment> shortHistory = punishments.subList(0, Math.min(5, punishments.size()));
+        int i = 8;
+        for (Punishment historyRecord : shortHistory) {
+            setHistoryRecordItem(i, historyRecord);
+            i += 9;
+        }
 
     } //todo rewrite UI stuff
 
@@ -280,19 +399,90 @@ public class PunishMenu extends GuiEditable {
 
         int pastOffenses = 0;
         for (Punishment punishment : punishments) {
-            if (punishment.getCategory() != category || punishment.getSeverity() != severity) return;
+            if (punishment.getCategory() != category || punishment.getSeverity() != severity) continue;
             pastOffenses++;
+        }
+        String duration;
+        if (time > 24.0d) {
+            duration = UtilTime.convert((long) time * 3600000, 0, UtilTime.TimeUnit.DAYS) + " days";
+        } else {
+            duration = UtilTime.convert((long) time * 3600000, 0, UtilTime.getBestUnit((long) time * 3600000)) + " " + UtilTime.getBestUnit((long) time * 3600000).name().toLowerCase();
         }
         setItem(new GuiItem(new ItemBuilder(stack)
                 .setDisplayName(color + "" + ChatColor.BOLD + "Severity " + severity)
                 .setLore(
                         ChatColor.WHITE + "Past Offenses: " + ChatColor.YELLOW + pastOffenses,
-                        ChatColor.WHITE + "Duration: " + ChatColor.YELLOW + UtilTime.convert((long) time * 3600000, 0, UtilTime.getBestUnit((long) time * 3600000)) + " " + UtilTime.getBestUnit((long) time * 3600000).name().toLowerCase())
+                        ChatColor.WHITE + "Duration: " + ChatColor.YELLOW + duration)
                 .build()) {
 
             @Override
             public void onUse(Player player, ClickType type, int slot) {
                 if (runner != null) runner.run(player, type, slot);
+            }
+        }, slot);
+    }
+
+    public void setHistoryRecordItem(int slot, Punishment punishment) {
+        String duration;
+        if (punishment.getHours() > 0) {
+            if (punishment.getHours() > 24.0d) {
+                duration = UtilTime.convert((long) punishment.getHours() * 3600000, 0, UtilTime.TimeUnit.DAYS) + " days";
+            } else {
+                duration = UtilTime.convert((long) punishment.getHours() * 3600000, 0, UtilTime.getBestUnit((long) punishment.getHours() * 3600000)) + " " + UtilTime.getBestUnit((long) punishment.getHours() * 3600000).name().toLowerCase();
+            }
+        } else {
+            duration = "Permanent";
+        }
+        String addedBy;
+        if (punishment.getStaff().toLowerCase().startsWith("uuid:")) {
+            addedBy = Bukkit.getOfflinePlayer(UUID.fromString(punishment.getStaff().substring(5))).getName();
+        } else {
+            addedBy = punishment.getStaff();
+        }
+        String removedBy = "No one";
+        if (punishment.getRemoveStaff() != null) {
+            if (punishment.getRemoveStaff().toLowerCase().startsWith("uuid:")) {
+                removedBy = Bukkit.getOfflinePlayer(UUID.fromString(punishment.getRemoveStaff().substring(5))).getName();
+            } else {
+                removedBy = punishment.getRemoveStaff();
+            }
+        }
+        String reappliedBy = "No one";
+        if (punishment.getReapplyStaff() != null) {
+            if (punishment.getReapplyStaff().toLowerCase().startsWith("uuid:")) {
+                reappliedBy = Bukkit.getOfflinePlayer(UUID.fromString(punishment.getReapplyStaff().substring(5))).getName();
+            } else {
+                reappliedBy = punishment.getReapplyStaff();
+            }
+        }
+        setItem(new GuiItem(new ItemBuilder(punishment.getCategory().getItem())
+                .setDisplayName(green + punishment.getCategory().getName())
+                .setLore(
+                        ChatColor.WHITE + "Punishment Type: " + ChatColor.YELLOW + punishment.getCategory().getName(),
+                        ChatColor.WHITE + "Severity: " + ChatColor.YELLOW + punishment.getSeverity())
+                .addLore(UtilText.wrap(ChatColor.WHITE + "Date: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getTime()) + " (" + UtilTime.convert(System.currentTimeMillis() - punishment.getTime(), 0, UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getTime())) + " " + UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getTime()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .addLore(ChatColor.WHITE + "Length: " + ChatColor.YELLOW + duration,
+                        ChatColor.WHITE + "Added By: " + ChatColor.YELLOW + addedBy,
+                        "")
+                .addLore(UtilText.wrap(ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + punishment.getReason(), 36).toArray(new String[0]))
+                .addLore(punishment.wasRemoved(),
+                        "",
+                        ChatColor.WHITE + "Removed By: " + ChatColor.YELLOW + removedBy)
+                .addLore(punishment.wasRemoved(), UtilText.wrap(ChatColor.WHITE + "Removed For: " + ChatColor.YELLOW + punishment.getRemoveReason(), 36).toArray(new String[0]))
+                .addLore(punishment.wasRemoved(), ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()), "")
+                .addLore(punishment.wasReactivated(),
+                        "",
+                        ChatColor.WHITE + "Reapplied By: " + ChatColor.YELLOW + reappliedBy)
+                .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied For: " + ChatColor.YELLOW + punishment.getReapplyReason(), 36).toArray(new String[0]))
+                .addLore(punishment.wasReactivated(), ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()))
+                .addLore(punishment.isActive(), "")
+                .addLore(punishment.isActive(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to remove!", 36).toArray(new String[0]))
+                .addLore(punishment.isRemoved() && (punishment.getHours() <= 0 || punishment.getHours() * 3600000 > System.currentTimeMillis()), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to reapply!", 36).toArray(new String[0])) // todo perms here
+                .addGlow(punishment.isActive())
+                .build()) {
+            @Override
+            public void onUse(Player player, ClickType type, int slot) {
+
             }
         }, slot);
     }
@@ -305,5 +495,4 @@ public class PunishMenu extends GuiEditable {
     public interface PunishRunner {
         void run(Player player, ClickType type, int slot);
     }
-
 }
