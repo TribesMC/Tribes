@@ -471,11 +471,11 @@ public class PunishMenu extends GuiEditable {
                         "",
                         ChatColor.WHITE + "Removed By: " + ChatColor.YELLOW + removedBy)
                 .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed For: " + ChatColor.YELLOW + punishment.getRemoveReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasRemovedPreviously(), ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()))
+                .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()) + " (" + UtilTime.convert(punishment.getRemovedAt(), 0, UtilTime.getBestUnit(punishment.getRemovedAt())) + " " + UtilTime.getBestUnit(punishment.getRemovedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
                 .addLore(punishment.wasReactivated(),
                         ChatColor.WHITE + "Reapplied By: " + ChatColor.YELLOW + reappliedBy)
                 .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied For: " + ChatColor.YELLOW + punishment.getReapplyReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasReactivated(), ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()))
+                .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()) + " (" + UtilTime.convert(punishment.getRemovedAt(), 0, UtilTime.getBestUnit(punishment.getReappliedAt())) + " " + UtilTime.getBestUnit(punishment.getReappliedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
                 .addLore(punishment.isActive() || punishment.wasRemoved(), "")
                 .addLore(punishment.isActive(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to remove!", 36).toArray(new String[0]))
                 .addLore(punishment.wasRemoved(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to reapply!", 36).toArray(new String[0])) // todo perms here
