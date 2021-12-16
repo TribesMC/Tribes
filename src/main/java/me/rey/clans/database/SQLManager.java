@@ -7,7 +7,6 @@ import me.rey.clans.features.punishments.PunishmentCategory;
 import me.rey.clans.features.punishments.PunishmentType;
 import me.rey.clans.playerdisplay.PlayerInfo;
 import me.rey.clans.utils.References;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -1241,6 +1240,7 @@ public class SQLManager {
     public void uploadPunishment(Punishment punishment) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
             conn = this.pool.getConnection();
@@ -1249,7 +1249,7 @@ public class SQLManager {
 
             ps = conn.prepareStatement("SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_NAME = ?");
             ps.setString(1, "punishments");
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             while (rs.next()) {
                 id = rs.getInt("AUTO_INCREMENT");
             }
@@ -1271,6 +1271,54 @@ public class SQLManager {
             ps.setDouble(6, punishment.getHours());
             ps.setInt(7, punishment.getSeverity());
             ps.setTimestamp(8, new Timestamp(punishment.getTime()));
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, rs);
+        }
+    }
+
+    public void removePunishment(Punishment punishment) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = this.pool.getConnection();
+
+            String stmt = "UPDATE `punishments` SET removed = ?, removeStaff = ?, removeReason = ?, removedAt = ? WHERE id = ?";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setBoolean(1, true);
+            ps.setString(2, punishment.getRemoveStaff());
+            ps.setString(3, punishment.getRemoveReason());
+            ps.setTimestamp(4, new Timestamp(punishment.getRemovedAt()));
+            ps.setInt(5, punishment.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, null);
+        }
+    }
+
+    public void reapplyPunishment(Punishment punishment) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = this.pool.getConnection();
+
+            String stmt = "UPDATE `punishments` SET removed = ?, reapplyStaff = ?, reapplyReason = ?, reappliedAt = ? WHERE id = ?";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setBoolean(1, false);
+            ps.setString(2, punishment.getReapplyStaff());
+            ps.setString(3, punishment.getReapplyReason());
+            ps.setTimestamp(4, new Timestamp(punishment.getReappliedAt()));
+            ps.setInt(5, punishment.getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -1308,7 +1356,7 @@ public class SQLManager {
                         rs.getBoolean("removed"),
                         rs.getString("removeStaff"),
                         rs.getString("removeReason"),
-                        rs.getTimestamp("removedAt") != null ? rs.getTimestamp("removeAt").getTime() : -1,
+                        rs.getTimestamp("removedAt") != null ? rs.getTimestamp("removedAt").getTime() : -1,
                         rs.getString("reapplyStaff"),
                         rs.getString("reapplyReason"),
                         rs.getTimestamp("reappliedAt") != null ? rs.getTimestamp("reappliedAt").getTime() : -1

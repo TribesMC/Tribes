@@ -77,18 +77,25 @@ public abstract class Gui implements Listener {
 			this.inventory.setItem(slot, new ItemStack(Material.AIR));
 		}
 	}
-	
+
 	protected void setItem(GuiItem item, int slot, int... slots) {
+		setItem(item, slot, false, slots);
+	}
+
+	protected void setItem(GuiItem item, int slot, boolean override, int... slots) {
 		for(int query : slots) {
-			if(events.containsKey(query)) continue;
+			if (!override) {
+				if (events.containsKey(query)) continue;
+			}
 			this.events.put(query, item);
 			this.inventory.setItem(query, item.get());
 		}
-		
-		if(events.containsKey(slot)) return;
+
+		if (!override) {
+			if (events.containsKey(slot)) return;
+		}
 		this.events.put(slot, item);
 		this.inventory.setItem(slot, item.get());
-		
 	}
 	
 	protected void fillEmptySlots(GuiItem guiItem) {

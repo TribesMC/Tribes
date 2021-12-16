@@ -1,6 +1,7 @@
 package me.rey.clans.features.punishments;
 
 import me.rey.clans.Tribes;
+import me.rey.clans.events.PunishmentsUpdateEvent;
 import me.rey.clans.utils.UtilTime;
 import me.rey.core.players.User;
 import me.rey.core.utils.Activatable;
@@ -25,12 +26,15 @@ public class PunishmentManager implements Activatable {
     }
 
     public List<Punishment> getPunishments(UUID uuid) {
-        return getPunishments(uuid, -1);
+        return getPunishments(uuid, -1, true);
     }
 
-    public List<Punishment> getPunishments(UUID uuid, int limit) {
+    public List<Punishment> getPunishments(UUID uuid, int limit, boolean updateCache) {
         List<Punishment> punishments = Tribes.getInstance().getSQLManager().getPunishments(uuid, limit);
-        this.punishments.put(uuid, punishments);
+        if (updateCache) {
+            this.punishments.put(uuid, punishments);
+            Bukkit.getPluginManager().callEvent(new PunishmentsUpdateEvent(uuid, punishments));
+        }
         return punishments;
     }
 
@@ -52,7 +56,27 @@ public class PunishmentManager implements Activatable {
                 new User(player).sendMessageWithPrefix("Punish", message);
             }
         }
-        punishments.getOrDefault(punishment.getPlayer(), new ArrayList<>()).add(punishment);
+        punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
+    }
+
+    public void removePunishment(Punishment punishment) {
+        removePunishment(punishment, null);
+    }
+
+    public void removePunishment(Punishment punishment, Player player) {
+        Tribes.getInstance().getSQLManager().removePunishment(punishment);
+        new User(player).sendMessageWithPrefix("Punish", "Successfully removed &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
+        punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
+    }
+
+    public void reapplyPunishment(Punishment punishment) {
+        reapplyPunishment(punishment, null);
+    }
+
+    public void reapplyPunishment(Punishment punishment, Player player) {
+        Tribes.getInstance().getSQLManager().reapplyPunishment(punishment);
+        new User(player).sendMessageWithPrefix("Punish", "Successfully reapplied &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
+        punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
     }
 
     public String getStaffMessage(Punishment punishment) {

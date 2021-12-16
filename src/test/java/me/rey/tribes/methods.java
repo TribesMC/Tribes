@@ -2,6 +2,7 @@ package me.rey.tribes;
 
 import me.rey.clans.utils.UtilTime;
 import me.rey.core.utils.UtilPacket;
+import org.apache.commons.lang.Validate;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -93,14 +94,127 @@ public class methods {
         return plate;
     }
 
-//    AA00 A
-//    A0{1-3} AAA
-//    AAA 0{1-3}A
-//    A{1-3}0{1-3} OR 0{1-3}A{1-3}
+    public static String numberInWords(int num) {
+        // String builder > string += string, since concatenation through += creates a
+        // new string in memory because strings are immutable, where StringBuilder stays
+        // constant, and is mutable
+        StringBuilder builder = new StringBuilder();
+        char[] numsAsChars = ("" + num).toCharArray();
+        for (char cha : numsAsChars) {
+            /*
+             * A switch case is like a collection of 'if' statements which execute a different
+             * piece of code depending on what condition is met, in this case, if 'cha' is equal
+             * to any of the below cases, it executes the code inside it. If it does not equal
+             * any of them, it executes 'default' instead. If a case/default is not broken using
+             * 'break', it execute the one below it too.
+             */
+            switch (cha) {
+                case '0':
+                    builder.append("zero").append(" ");
+                    break;
+                case '1':
+                    builder.append("one").append(" ");
+                    break;
+                case '2':
+                    builder.append("two").append(" ");
+                    break;
+                case '3':
+                    builder.append("three").append(" ");
+                    break;
+                case '4':
+                    builder.append("four").append(" ");
+                    break;
+                case '5':
+                    builder.append("five").append(" ");
+                    break;
+                case '6':
+                    builder.append("six").append(" ");
+                    break;
+                case '7':
+                    builder.append("seven").append(" ");
+                    break;
+                case '8':
+                    builder.append("eight").append(" ");
+                    break;
+                case '9':
+                    builder.append("nine").append(" ");
+                    break;
+                default:
+                    builder.append(cha).append(" ");
+                    break;
+            }
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
+
+    public static int highestNumberBelowNDivisibleByTwoNumbers(int divisor1, int divisor2, int number) {
+        for (int i = number; i > 0; i--) {
+            if ((i % divisor1 == 0) && (i % divisor2 == 0)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static boolean stringsAtIndexMatch(String[] array, int pos1, int pos2) {
+        return array[pos1].equals(array[pos2]);
+    }
+
+    public static String apaFormatCitation(String[] authors, int year) {
+        StringBuilder authorsAsString = new StringBuilder("(");
+        for (int i = 0; i < authors.length; i++) {
+            String author = authors[i];
+            if (i == author.length() - 1) {
+                authorsAsString.append("& ");
+            }
+            authorsAsString.append(author).append(", ");
+        }
+        authorsAsString.append(year).append(")");
+        return authorsAsString.toString();
+    }
+
+    public static String receiptLine(String productName, String priceForm, int maxLine) {
+        /* THE £ SIGN APPEARS AS AN ASCII ERROR ON SOME COMPILERS (looks like this on IntelliJ)
+         * '�'
+         *
+         * REMOVE THE FOLLOWING COMMENT LINES:
+         * The instructions state that if the maxLine is exceeded by the length of
+         * productName and priceForm alone, you should not attempt to truncate it...
+         * This makes no sense, because then the line is exceeded which in an actual
+         * software environment, would lead to serious issues, but who tf am I to judge.
+         */
+        if (!priceForm.contains("£")) {
+            priceForm = "£" + priceForm;
+        }
+        if (productName.length() + priceForm.length() > maxLine) {
+            return productName + priceForm;
+        } else {
+            int dots = maxLine - (productName.length() + priceForm.length());
+            StringBuilder builder = new StringBuilder(productName);
+            for (int i = 0; i < dots; i++) {
+                builder.append(".");
+            }
+            builder.append(priceForm);
+            return builder.toString();
+        }
+    }
+
+    public static String[] pagedData(String[] array, int pos1, int maxSize) {
+        // Math#min(int, int) returns the lowest integer of 2 integers
+        int max = Math.min(array.length - pos1, maxSize);
+        String[] words = new String[max];
+        System.arraycopy(array, pos1, words, 0, max);
+        return words;
+    }
 
     @Test
     public void test() {
-        System.out.println(formattedRegistration("AAA000"));
-//        System.out.println(Arrays.toString("A049 AAA".split("(?<=[0-9]{1,3})")));
+        System.out.println(Arrays.toString(pagedData(new String[]{
+                "penis",
+                "man",
+                "men",
+                "people"
+        }, 2, 20)));
     }
 }

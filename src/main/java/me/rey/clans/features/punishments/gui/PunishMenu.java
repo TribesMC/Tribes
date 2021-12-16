@@ -7,6 +7,7 @@ import me.rey.clans.features.punishments.PunishmentType;
 import me.rey.clans.gui.GuiEditable;
 import me.rey.clans.utils.UtilTime;
 import me.rey.core.gui.GuiItem;
+import me.rey.core.players.User;
 import me.rey.core.utils.ItemBuilder;
 import me.rey.core.utils.UtilText;
 import org.bukkit.Bukkit;
@@ -455,6 +456,7 @@ public class PunishMenu extends GuiEditable {
                 reappliedBy = punishment.getReapplyStaff();
             }
         }
+
         setItem(new GuiItem(new ItemBuilder(punishment.getCategory().getItem())
                 .setDisplayName(green + punishment.getCategory().getName())
                 .setLore(
@@ -465,26 +467,33 @@ public class PunishMenu extends GuiEditable {
                         ChatColor.WHITE + "Added By: " + ChatColor.YELLOW + addedBy,
                         "")
                 .addLore(UtilText.wrap(ChatColor.WHITE + "Reason: " + ChatColor.YELLOW + punishment.getReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasRemoved(),
+                .addLore(punishment.wasRemovedPreviously(),
                         "",
                         ChatColor.WHITE + "Removed By: " + ChatColor.YELLOW + removedBy)
-                .addLore(punishment.wasRemoved(), UtilText.wrap(ChatColor.WHITE + "Removed For: " + ChatColor.YELLOW + punishment.getRemoveReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasRemoved(), ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()), "")
+                .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed For: " + ChatColor.YELLOW + punishment.getRemoveReason(), 36).toArray(new String[0]))
+                .addLore(punishment.wasRemovedPreviously(), ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()))
                 .addLore(punishment.wasReactivated(),
-                        "",
                         ChatColor.WHITE + "Reapplied By: " + ChatColor.YELLOW + reappliedBy)
                 .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied For: " + ChatColor.YELLOW + punishment.getReapplyReason(), 36).toArray(new String[0]))
                 .addLore(punishment.wasReactivated(), ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()))
-                .addLore(punishment.isActive(), "")
+                .addLore(punishment.isActive() || punishment.wasRemoved(), "")
                 .addLore(punishment.isActive(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to remove!", 36).toArray(new String[0]))
-                .addLore(punishment.isRemoved() && (punishment.getHours() <= 0 || punishment.getHours() * 3600000 > System.currentTimeMillis()), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to reapply!", 36).toArray(new String[0])) // todo perms here
+                .addLore(punishment.wasRemoved(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to reapply!", 36).toArray(new String[0])) // todo perms here
                 .addGlow(punishment.isActive())
                 .build()) {
             @Override
             public void onUse(Player player, ClickType type, int slot) {
-
+                if (punishment.isActive()) {
+                    punishment.remove(player, reason);
+                    player.closeInventory();
+                } else {
+                    if (punishment.getHours() < 0 || (punishment.getTime() + (punishment.getHours() * 3600000) > System.currentTimeMillis())) {
+                        punishment.reapply(player, reason);
+                        player.closeInventory();
+                    }
+                }
             }
-        }, slot);
+        }, slot, true);
     }
 
     @Override
