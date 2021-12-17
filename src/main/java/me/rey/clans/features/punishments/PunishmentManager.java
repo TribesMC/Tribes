@@ -6,17 +6,27 @@ import me.rey.clans.utils.UtilTime;
 import me.rey.core.players.User;
 import me.rey.core.utils.Activatable;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
 import java.util.*;
 
-public class PunishmentManager implements Activatable {
+public class PunishmentManager implements Activatable, Listener {
 
     Map<UUID, List<Punishment>> punishments;
+    public String appealUrl = "Fuck you.";
 
     @Override
     public void onEnable() {
         punishments = new HashMap<>();
+        Bukkit.getPluginManager().registerEvents(this, Tribes.getInstance().getPlugin());
     }
 
     @Override
@@ -40,6 +50,74 @@ public class PunishmentManager implements Activatable {
 
     public void addPunishment(Punishment punishment, boolean sendMessage, boolean sendPublicMessage) {
         Tribes.getInstance().getSQLManager().uploadPunishment(punishment);
+        OfflinePlayer target = Bukkit.getOfflinePlayer(punishment.getPlayer());
+        if (target.isOnline()) {
+            if (punishment.getPunishmentType() == PunishmentType.KICK) {
+                String reason = ChatColor.RED + "" + ChatColor.BOLD + "You have been kicked" +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Continuing to break the rules will result in a ban!";
+                target.getPlayer().kickPlayer(reason);
+                return;
+            } else if (punishment.getPunishmentType() == PunishmentType.BAN || punishment.getPunishmentType() == PunishmentType.IPBAN) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = ChatColor.RED + "" + ChatColor.BOLD + "You are banned " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl;
+                target.getPlayer().kickPlayer(reason);
+            } else if (punishment.getPunishmentType() == PunishmentType.MUTE) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
+                        "\n";
+                for (String msg : reason.split("\n")) {
+                    target.getPlayer().sendMessage(msg);
+                }
+            } else if (punishment.getPunishmentType() == PunishmentType.REPORTBAN) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
+                        "\n";
+                for (String msg : reason.split("\n")) {
+                    target.getPlayer().sendMessage(msg);
+                }
+            }
+        }
+
         List<UUID> publicMessageBlacklist = new ArrayList<>();
         if (sendMessage) {
             String message = getStaffMessage(punishment);
@@ -75,6 +153,67 @@ public class PunishmentManager implements Activatable {
 
     public void reapplyPunishment(Punishment punishment, Player player) {
         Tribes.getInstance().getSQLManager().reapplyPunishment(punishment);
+        OfflinePlayer target = Bukkit.getOfflinePlayer(punishment.getPlayer());
+        if (target.isOnline()) {
+            if (punishment.getPunishmentType() == PunishmentType.BAN || punishment.getPunishmentType() == PunishmentType.IPBAN) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = ChatColor.RED + "" + ChatColor.BOLD + "You are banned " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl;
+                target.getPlayer().kickPlayer(reason);
+            } else if (punishment.getPunishmentType() == PunishmentType.MUTE) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
+                        "\n";
+                for (String msg : reason.split("\n")) {
+                    player.sendMessage(msg);
+                }
+            } else if (punishment.getPunishmentType() == PunishmentType.REPORTBAN) {
+                String duration;
+                if (punishment.getHours() > 0) {
+                    long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                    if (punishment.getHours() > 24.0d) {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                    } else {
+                        duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                    }
+                } else {
+                    duration = "permanently";
+                }
+
+                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration +
+                        "\n" + ChatColor.WHITE + punishment.getReason() +
+                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
+                        "\n";
+                for (String msg : reason.split("\n")) {
+                    target.getPlayer().sendMessage(msg);
+                }
+            }
+        }
         new User(player).sendMessageWithPrefix("Punish", "Successfully reapplied &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
         punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
     }
@@ -118,5 +257,84 @@ public class PunishmentManager implements Activatable {
         }
 
         return "&s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + " &rhas been " + punishment.getPunishmentType().pastTense() + " for &s" + punishment.getReason() + duration + "&r!";
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLogin(AsyncPlayerPreLoginEvent event) {
+        List<Punishment> punishments = this.punishments.getOrDefault(event.getUniqueId(), getPunishments(event.getUniqueId()));
+        if (punishments == null || punishments.isEmpty()) return;
+        for (Punishment punishment : punishments) {
+            if (punishment.getPunishmentType() != PunishmentType.IPBAN && punishment.getPunishmentType() != PunishmentType.BAN) continue;
+            if (!punishment.isActive()) continue;
+
+            String duration;
+            if (punishment.getHours() > 0) {
+                long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                if (punishment.getHours() > 24.0d) {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                } else {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                }
+            } else {
+                duration = "permanently";
+            }
+
+            String reason = ChatColor.RED + "" + ChatColor.BOLD + "You are banned " + duration +
+                    "\n" + ChatColor.WHITE + punishment.getReason() +
+                    "\n" + ChatColor.DARK_GREEN + "Want to appeal?" + ChatColor.GREEN + appealUrl;
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, reason);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    private void onChat(AsyncPlayerChatEvent event) {
+        List<Punishment> punishments = this.punishments.getOrDefault(event.getPlayer().getUniqueId(), getPunishments(event.getPlayer().getUniqueId()));
+        if (punishments == null || punishments.isEmpty()) return;
+        for (Punishment punishment : punishments) {
+            if (punishment.getPunishmentType() != PunishmentType.IPBAN && punishment.getPunishmentType() != PunishmentType.BAN)
+                continue;
+            if (!punishment.isActive()) continue;
+
+            String duration;
+            if (punishment.getHours() > 0) {
+                long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                if (punishment.getHours() > 24.0d) {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                } else {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                }
+            } else {
+                duration = "permanently";
+            }
+
+            new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Hey! Quiet there... You're muted " + duration + " for &s" + punishment.getReason() + "&r!");
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    private void onSignChange(SignChangeEvent event) {
+        List<Punishment> punishments = this.punishments.getOrDefault(event.getPlayer().getUniqueId(), getPunishments(event.getPlayer().getUniqueId()));
+        if (punishments == null || punishments.isEmpty()) return;
+        for (Punishment punishment : punishments) {
+            if (punishment.getPunishmentType() != PunishmentType.IPBAN && punishment.getPunishmentType() != PunishmentType.BAN)
+                continue;
+            if (!punishment.isActive()) continue;
+
+            String duration;
+            if (punishment.getHours() > 0) {
+                long calc = (long) (punishment.getTime() + (punishment.getHours() * 3600000)) - System.currentTimeMillis();
+                if (punishment.getHours() > 24.0d) {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.TimeUnit.DAYS) + " days";
+                } else {
+                    duration = "for " + UtilTime.convert(calc, 0, UtilTime.getBestUnit(calc)) + " " + UtilTime.getBestUnit(calc).name().toLowerCase();
+                }
+            } else {
+                duration = "permanently";
+            }
+
+            new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Oi you naughty muted player, you..! You're muted " + duration + " for &s" + punishment.getReason() + "&r!");
+            event.setCancelled(true);
+        }
     }
 }

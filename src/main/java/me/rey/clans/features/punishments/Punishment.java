@@ -64,6 +64,25 @@ public class Punishment {
         this.reappliedAt = -1;
     }
 
+    private Punishment(Punishment punishment) {
+        this.id = punishment.id;
+        this.player = punishment.player;
+        this.punishmentType = punishment.punishmentType;
+        this.category = punishment.category;
+        this.reason = punishment.reason;
+        this.staff = punishment.staff;
+        this.hours = punishment.hours;
+        this.severity = punishment.severity;
+        this.time = punishment.time;
+        this.removed = punishment.removed;
+        this.removeStaff = punishment.removeStaff;
+        this.removeReason = punishment.removeReason;
+        this.removedAt = punishment.removedAt;
+        this.reapplyStaff = punishment.reapplyStaff;
+        this.reapplyReason = punishment.reapplyReason;
+        this.reappliedAt = punishment.reappliedAt;
+    }
+
     public void remove(Player player, String reason) {
         if (!isActive()) return;
         this.removeStaff = "UUID:" + player.getUniqueId();
