@@ -19,6 +19,7 @@ import org.json.simple.parser.ParseException;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class SQLManager {
 
@@ -1328,9 +1329,30 @@ public class SQLManager {
         }
     }
 
+    public void deletePunishment(Punishment punishment) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = this.pool.getConnection();
+
+            String stmt = "DELETE FROM `punishments` WHERE id = ?";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setInt(1, punishment.getId());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, null);
+        }
+    }
+
     public List<Punishment> getPunishments(UUID uuid, int limit) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         List<Punishment> punishments = new ArrayList<>();
 
         try {
@@ -1340,7 +1362,7 @@ public class SQLManager {
             ps = conn.prepareStatement(stmt);
 
             ps.setString(1, uuid.toString());
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 punishments.add(new Punishment(
@@ -1365,8 +1387,49 @@ public class SQLManager {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            this.pool.close(conn, ps, null);
+            this.pool.close(conn, ps, rs);
         }
         return punishments;
+    }
+
+    public Punishment getPunishmentById(int id) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            conn = this.pool.getConnection();
+
+            String stmt = "SELECT * FROM `punishments` WHERE `id` = ?";
+            ps = conn.prepareStatement(stmt);
+
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            if (!rs.next()) return null;
+            return new Punishment(
+                    rs.getInt("id"),
+                    UUID.fromString(rs.getString("player")),
+                    PunishmentType.getValue(rs.getInt("type")),
+                    PunishmentCategory.getValue(rs.getInt("category")),
+                    rs.getString("reason"),
+                    rs.getString("staff"),
+                    rs.getDouble("hours"),
+                    rs.getInt("severity"),
+                    rs.getTimestamp("time") != null ? rs.getTimestamp("time").getTime() : -1,
+                    rs.getBoolean("removed"),
+                    rs.getString("removeStaff"),
+                    rs.getString("removeReason"),
+                    rs.getTimestamp("removedAt") != null ? rs.getTimestamp("removedAt").getTime() : -1,
+                    rs.getString("reapplyStaff"),
+                    rs.getString("reapplyReason"),
+                    rs.getTimestamp("reappliedAt") != null ? rs.getTimestamp("reappliedAt").getTime() : -1
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.pool.close(conn, ps, rs);
+        }
+        return null;
     }
 }

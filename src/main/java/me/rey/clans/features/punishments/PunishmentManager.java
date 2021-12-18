@@ -2,6 +2,7 @@ package me.rey.clans.features.punishments;
 
 import me.rey.clans.Tribes;
 import me.rey.clans.events.PunishmentsUpdateEvent;
+import me.rey.clans.features.punishments.gui.PunishMenu;
 import me.rey.clans.utils.UtilTime;
 import me.rey.core.players.User;
 import me.rey.core.utils.Activatable;
@@ -143,7 +144,9 @@ public class PunishmentManager implements Activatable, Listener {
 
     public void removePunishment(Punishment punishment, Player player) {
         Tribes.getInstance().getSQLManager().removePunishment(punishment);
-        new User(player).sendMessageWithPrefix("Punish", "Successfully removed &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
+        if (player != null) {
+            new User(player).sendMessageWithPrefix("Punish", "Successfully removed &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
+        }
         punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
     }
 
@@ -218,6 +221,18 @@ public class PunishmentManager implements Activatable, Listener {
         punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
     }
 
+    public void deletePunishment(Punishment punishment) {
+        deletePunishment(punishment, null);
+    }
+
+    public void deletePunishment(Punishment punishment, Player player) {
+        Tribes.getInstance().getSQLManager().deletePunishment(punishment);
+        if (player != null) {
+            new User(player).sendMessageWithPrefix("Punish", "Successfully deleted &s" + Bukkit.getOfflinePlayer(punishment.getPlayer()).getName() + "&r's punishment!");
+        }
+        punishments.put(punishment.getPlayer(), getPunishments(punishment.getPlayer()));
+    }
+
     public String getStaffMessage(Punishment punishment) {
         String punisher;
         if (punishment.getStaff().toLowerCase().startsWith("uuid:")) {
@@ -260,7 +275,7 @@ public class PunishmentManager implements Activatable, Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onLogin(AsyncPlayerPreLoginEvent event) {
+    private void onLogin(AsyncPlayerPreLoginEvent event) {
         List<Punishment> punishments = this.punishments.getOrDefault(event.getUniqueId(), getPunishments(event.getUniqueId()));
         if (punishments == null || punishments.isEmpty()) return;
         for (Punishment punishment : punishments) {
@@ -283,6 +298,7 @@ public class PunishmentManager implements Activatable, Listener {
                     "\n" + ChatColor.WHITE + punishment.getReason() +
                     "\n" + ChatColor.DARK_GREEN + "Want to appeal?" + ChatColor.GREEN + appealUrl;
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, reason);
+            return;
         }
     }
 
@@ -291,8 +307,7 @@ public class PunishmentManager implements Activatable, Listener {
         List<Punishment> punishments = this.punishments.getOrDefault(event.getPlayer().getUniqueId(), getPunishments(event.getPlayer().getUniqueId()));
         if (punishments == null || punishments.isEmpty()) return;
         for (Punishment punishment : punishments) {
-            if (punishment.getPunishmentType() != PunishmentType.IPBAN && punishment.getPunishmentType() != PunishmentType.BAN)
-                continue;
+            if (punishment.getPunishmentType() != PunishmentType.MUTE) continue;
             if (!punishment.isActive()) continue;
 
             String duration;
@@ -309,6 +324,7 @@ public class PunishmentManager implements Activatable, Listener {
 
             new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Hey! Quiet there... You're muted " + duration + " for &s" + punishment.getReason() + "&r!");
             event.setCancelled(true);
+            return;
         }
     }
 
@@ -317,8 +333,7 @@ public class PunishmentManager implements Activatable, Listener {
         List<Punishment> punishments = this.punishments.getOrDefault(event.getPlayer().getUniqueId(), getPunishments(event.getPlayer().getUniqueId()));
         if (punishments == null || punishments.isEmpty()) return;
         for (Punishment punishment : punishments) {
-            if (punishment.getPunishmentType() != PunishmentType.IPBAN && punishment.getPunishmentType() != PunishmentType.BAN)
-                continue;
+            if (punishment.getPunishmentType() != PunishmentType.MUTE) continue;
             if (!punishment.isActive()) continue;
 
             String duration;
@@ -335,6 +350,7 @@ public class PunishmentManager implements Activatable, Listener {
 
             new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Oi you naughty muted player, you..! You're muted " + duration + " for &s" + punishment.getReason() + "&r!");
             event.setCancelled(true);
+            return;
         }
     }
 }

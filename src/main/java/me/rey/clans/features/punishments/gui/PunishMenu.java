@@ -341,11 +341,27 @@ public class PunishMenu extends GuiEditable {
          * Minor history buttons
          */
 
-        List<Punishment> shortHistory = punishments.subList(0, Math.min(5, punishments.size()));
+
+        List<Punishment> shortHistory = punishments.size() == 6 ? punishments : punishments.subList(0, Math.min(5, punishments.size()));
         int i = 8;
         for (Punishment historyRecord : shortHistory) {
             setHistoryRecordItem(i, historyRecord);
             i += 9;
+        }
+        if (punishments.size() > 6) {
+            setItem(new GuiItem(new ItemBuilder(Material.SIGN)
+                    .setDisplayName(green + "More History")
+                    .setLore(UtilText.wrap(ChatColor.YELLOW + target.getName() + ChatColor.GRAY + " has " + ChatColor.YELLOW + punishments.size() + ChatColor.GRAY + " punishments on their record!", 36).toArray(new String[0]))
+                    .addLore("", green + "Click" + ChatColor.GRAY + " to view them!")
+                    .setAmount(punishments.size())
+                    .build()) {
+                @Override
+                public void onUse(Player player, ClickType type, int slot) {
+                    PunishHistoryMenu gui = new PunishHistoryMenu(player.getPlayer(), target, punishments, new PunishSession(player, target, reason));
+                    gui.setup();
+                    gui.open(player.getPlayer());
+                }
+            }, 53);
         }
 
     } //todo rewrite UI stuff
@@ -459,7 +475,9 @@ public class PunishMenu extends GuiEditable {
 
         setItem(new GuiItem(new ItemBuilder(punishment.getCategory().getItem())
                 .setDisplayName(green + punishment.getCategory().getName())
-                .setLore(
+                // todo do proper permissions check later
+                .setLore(opener.isOp(), ChatColor.WHITE + "ID: " + ChatColor.YELLOW + punishment.getId())
+                .addLore(
                         ChatColor.WHITE + "Punishment Type: " + ChatColor.YELLOW + punishment.getCategory().getName(),
                         ChatColor.WHITE + "Severity: " + ChatColor.YELLOW + punishment.getSeverity())
                 .addLore(UtilText.wrap(ChatColor.WHITE + "Date: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getTime()) + " (" + UtilTime.convert(System.currentTimeMillis() - punishment.getTime(), 0, UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getTime())) + " " + UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getTime()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
@@ -471,11 +489,12 @@ public class PunishMenu extends GuiEditable {
                         "",
                         ChatColor.WHITE + "Removed By: " + ChatColor.YELLOW + removedBy)
                 .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed For: " + ChatColor.YELLOW + punishment.getRemoveReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()) + " (" + UtilTime.convert(punishment.getRemovedAt(), 0, UtilTime.getBestUnit(punishment.getRemovedAt())) + " " + UtilTime.getBestUnit(punishment.getRemovedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .addLore(punishment.wasRemovedPreviously(), UtilText.wrap(ChatColor.WHITE + "Removed At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getRemovedAt()) + " (" + UtilTime.convert(System.currentTimeMillis() - punishment.getRemovedAt(), 0, UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getRemovedAt())) + " " + UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getRemovedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .addLore(punishment.wasRemovedPreviously() && punishment.wasReactivated(), "")
                 .addLore(punishment.wasReactivated(),
                         ChatColor.WHITE + "Reapplied By: " + ChatColor.YELLOW + reappliedBy)
                 .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied For: " + ChatColor.YELLOW + punishment.getReapplyReason(), 36).toArray(new String[0]))
-                .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()) + " (" + UtilTime.convert(punishment.getRemovedAt(), 0, UtilTime.getBestUnit(punishment.getReappliedAt())) + " " + UtilTime.getBestUnit(punishment.getReappliedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
+                .addLore(punishment.wasReactivated(), UtilText.wrap(ChatColor.WHITE + "Reapplied At: " + ChatColor.YELLOW + UtilTime.getTimeDate(punishment.getReappliedAt()) + " (" + UtilTime.convert(System.currentTimeMillis() - punishment.getRemovedAt(), 0, UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getReappliedAt())) + " " + UtilTime.getBestUnit(System.currentTimeMillis() - punishment.getReappliedAt()).name().toLowerCase() + " ago)", 36).toArray(new String[0]))
                 .addLore(punishment.isActive() || punishment.wasRemoved(), "")
                 .addLore(punishment.isActive(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to remove!", 36).toArray(new String[0]))
                 .addLore(punishment.wasRemoved(), UtilText.wrap(ChatColor.YELLOW + "Shift-Right Click" + ChatColor.WHITE + " to reapply!", 36).toArray(new String[0])) // todo perms here
@@ -483,6 +502,7 @@ public class PunishMenu extends GuiEditable {
                 .build()) {
             @Override
             public void onUse(Player player, ClickType type, int slot) {
+                if (type != ClickType.SHIFT_RIGHT) return;
                 if (punishment.isActive()) {
                     punishment.remove(player, reason);
                     player.closeInventory();
@@ -503,5 +523,29 @@ public class PunishMenu extends GuiEditable {
 
     public interface PunishRunner {
         void run(Player player, ClickType type, int slot);
+    }
+
+    public static class PunishSession {
+        private final Player player;
+        private final OfflinePlayer target;
+        private final String reason;
+
+        public PunishSession(Player player, OfflinePlayer target, String reason) {
+            this.player = player;
+            this.target = target;
+            this.reason = reason;
+        }
+
+        public Player getPlayer() {
+            return player;
+        }
+
+        public OfflinePlayer getTarget() {
+            return target;
+        }
+
+        public String getReason() {
+            return reason;
+        }
     }
 }

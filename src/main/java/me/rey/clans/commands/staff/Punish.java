@@ -29,10 +29,8 @@ public class Punish extends ClansCommand {
 
         if (args == null || args.length <= 0) {
             player.sendMessageWithPrefix("Punish", "No player or reason provided! Usage: &s/punish <player> <reason>");
-            return;
         } else if (args.length == 1) {
             player.sendMessageWithPrefix("Punish", "No reason provided! Usage: &s/punish <player> <reason>");
-            return;
         } else {
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 

@@ -5,10 +5,7 @@ import me.rey.clans.clans.Clan;
 import me.rey.clans.clans.WarriorsTeamHandler;
 import me.rey.clans.commands.*;
 import me.rey.clans.commands.base.Base;
-import me.rey.clans.commands.staff.Legendary;
-import me.rey.clans.commands.staff.Punish;
-import me.rey.clans.commands.staff.PvpTimerCmd;
-import me.rey.clans.commands.staff.SpectatorObserve;
+import me.rey.clans.commands.staff.*;
 import me.rey.clans.commands.staff.loggers.Loggers;
 import me.rey.clans.commands.test.FreezeEnergy;
 import me.rey.clans.commands.test.TestMode;
@@ -41,6 +38,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 public class Tribes extends Module {
 
@@ -252,7 +251,9 @@ public class Tribes extends Module {
                 new TestMode(),
                 new Legendary(),
                 new Loggers(),
-                new Punish()
+                new Punish(),
+                new PunishWipe(),
+                new PunishHistory()
         ));
     }
 

@@ -25,3 +25,8 @@ commands:
   equip:
   loggers:
   punish:
+    aliases: [p]
+  punishwipe:
+    aliases: [pwipe]
+  punishhistory:
+    aliases: [ph]
