@@ -356,7 +356,7 @@ public class PunishmentManager implements Activatable, Listener {
                 duration = "permanently";
             }
 
-            new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Oi you naughty muted player, you..! You're muted " + duration + " for &s" + punishment.getReason() + "&r!");
+            new User(event.getPlayer()).sendMessageWithPrefix("Punish", "Oi you naughty muted player, you..! You're muted " + duration + " for &s" + punishment.getReason() + "&r! You can't be editing that sign.");
             event.setCancelled(true);
             return;
         }
