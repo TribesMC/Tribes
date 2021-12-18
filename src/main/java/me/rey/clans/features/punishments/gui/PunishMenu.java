@@ -163,7 +163,7 @@ public class PunishMenu extends GuiEditable {
                     reason,
                     "UUID:" + player.getUniqueId().toString(),
                     -1,
-                    1,
+                    4,
                     System.currentTimeMillis()
             );
             Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
@@ -183,7 +183,7 @@ public class PunishMenu extends GuiEditable {
                     reason,
                     "UUID:" + player.getUniqueId().toString(),
                     -1,
-                    1,
+                    4,
                     System.currentTimeMillis()
             );
             Tribes.getInstance().getPunishmentManager().addPunishment(punishment, true, true);
