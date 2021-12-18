@@ -89,12 +89,14 @@ public class PunishmentManager implements Activatable, Listener {
                     duration = "permanently";
                 }
 
-                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration +
-                        "\n" + ChatColor.WHITE + punishment.getReason() +
-                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
-                        "\n";
-                for (String msg : reason.split("\n")) {
-                    target.getPlayer().sendMessage(msg);
+                String[] reasons = new String[] {
+                        ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration,
+                        ChatColor.WHITE + punishment.getReason(),
+                        ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl,
+                        ""
+                };
+                for (String reason : reasons) {
+                    target.getPlayer().sendMessage(reason);
                 }
             } else if (punishment.getPunishmentType() == PunishmentType.REPORTBAN) {
                 String duration;
@@ -109,12 +111,14 @@ public class PunishmentManager implements Activatable, Listener {
                     duration = "permanently";
                 }
 
-                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration +
-                        "\n" + ChatColor.WHITE + punishment.getReason() +
-                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
-                        "\n";
-                for (String msg : reason.split("\n")) {
-                    target.getPlayer().sendMessage(msg);
+                String[] reasons = new String[] {
+                        ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration,
+                        ChatColor.WHITE + punishment.getReason(),
+                        ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl,
+                        ""
+                };
+                for (String reason : reasons) {
+                    target.getPlayer().sendMessage(reason);
                 }
             }
         }
@@ -188,12 +192,14 @@ public class PunishmentManager implements Activatable, Listener {
                     duration = "permanently";
                 }
 
-                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration +
-                        "\n" + ChatColor.WHITE + punishment.getReason() +
-                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
-                        "\n";
-                for (String msg : reason.split("\n")) {
-                    player.sendMessage(msg);
+                String[] reasons = new String[] {
+                        ChatColor.RED + "" + ChatColor.BOLD + "You have been muted " + duration,
+                        ChatColor.WHITE + punishment.getReason(),
+                        ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl,
+                        ""
+                };
+                for (String reason : reasons) {
+                    target.getPlayer().sendMessage(reason);
                 }
             } else if (punishment.getPunishmentType() == PunishmentType.REPORTBAN) {
                 String duration;
@@ -208,12 +214,14 @@ public class PunishmentManager implements Activatable, Listener {
                     duration = "permanently";
                 }
 
-                String reason = "\n" + ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration +
-                        "\n" + ChatColor.WHITE + punishment.getReason() +
-                        "\n" + ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl +
-                        "\n";
-                for (String msg : reason.split("\n")) {
-                    target.getPlayer().sendMessage(msg);
+                String[] reasons = new String[] {
+                        ChatColor.RED + "" + ChatColor.BOLD + "You have been banned from reporting players " + duration,
+                        ChatColor.WHITE + punishment.getReason(),
+                        ChatColor.DARK_GREEN + "Want to appeal? " + ChatColor.GREEN + appealUrl,
+                        ""
+                };
+                for (String reason : reasons) {
+                    target.getPlayer().sendMessage(reason);
                 }
             }
         }
